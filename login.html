@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Gems❄️ — Espace Administrateur</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --text: #f5f5f7;
+      --text-secondary: #a1a1a6;
+      --accent: #0a84ff;
+      --glass: rgba(30, 30, 32, 0.88);
+      --border: rgba(255, 255, 255, 0.14);
+      --shadow: 0 10px 30px rgba(0,0,0,0.6);
+      --transition: all 0.4s ease;
+      --neon-glow: 0 0 16px rgba(10, 132, 255, 0.6);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 0;
+      overflow: hidden;
+      background-image: url('m4.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      touch-action: manipulation;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.68);
+      z-index: -2;
+    }
+
+    /* Loader ultra mobile */
+    #loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      transition: transform 0.9s ease;
+    }
+
+    #loader-logo {
+      color: white;
+      font-size: clamp(2.6rem, 13vw, 5rem);
+      font-weight: 900;
+      letter-spacing: 9px;
+      animation: pulse 2.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: scale(0.96); }
+      50%      { opacity: 1;   transform: scale(1.03); }
+    }
+
+    .loader-bar {
+      width: 0; height: 4px; background: var(--accent);
+      position: absolute; bottom: 0; left: 0;
+      transition: width 0.9s ease;
+    }
+
+    /* Curseur desktop only */
+    #cursor {
+      width: 14px; height: 14px; background: var(--text); border-radius: 50%;
+      position: fixed; pointer-events: none; z-index: 9998;
+      mix-blend-mode: difference; transition: transform 0.12s ease-out;
+      display: none;
+    }
+
+    /* Conteneur login mobile-first */
+    .login-container {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.5rem 1.8rem;
+      width: 92%;
+      max-width: 420px;
+      box-shadow: var(--shadow);
+      text-align: center;
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s 0.6s ease, transform 0.8s 0.6s ease;
+    }
+
+    .login-container.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .login-title {
+      font-size: clamp(2.2rem, 9vw, 3.2rem);
+      font-weight: 900;
+      letter-spacing: -1px;
+      margin-bottom: 0.6rem;
+      background: linear-gradient(90deg, var(--text) 30%, var(--accent) 70%, var(--text) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .login-subtitle {
+      color: var(--text-secondary);
+      font-size: clamp(0.95rem, 3.8vw, 1.05rem);
+      margin-bottom: 2rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 500;
+      font-size: clamp(0.9rem, 3.5vw, 1rem);
+      color: var(--text-secondary);
+    }
+
+    input {
+      width: 100%;
+      padding: 1.1rem 1.3rem;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: clamp(1rem, 4vw, 1.1rem);
+      transition: all 0.3s ease;
+      min-height: 52px; /* zone tactile confortable */
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(10,132,255,0.25);
+    }
+
+    .login-btn {
+      width: 100%;
+      padding: 1.2rem;
+      background: var(--accent);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: clamp(1.05rem, 4.2vw, 1.15rem);
+      cursor: pointer;
+      transition: all 0.4s ease;
+      box-shadow: 0 8px 25px rgba(10,132,255,0.35);
+      margin-top: 1rem;
+      min-height: 56px;
+    }
+
+    .login-btn:active {
+      transform: translateY(2px) scale(0.97);
+      box-shadow: 0 6px 18px rgba(10,132,255,0.3);
+    }
+
+    .login-btn:disabled {
+      background: #444;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    #message {
+      margin-top: 1.4rem;
+      font-size: clamp(0.95rem, 3.8vw, 1.05rem);
+      min-height: 1.4rem;
+      text-align: center;
+    }
+
+    .error { color: #ff4d4d; }
+    .success { color: #34d399; }
+
+    /* Responsive très mobile */
+    @media (max-width: 480px) {
+      .login-container { padding: 2rem 1.5rem; width: 94%; }
+      .login-title { font-size: clamp(2rem, 10vw, 2.8rem); }
+      .login-subtitle { margin-bottom: 1.8rem; }
+      .form-group { margin-bottom: 1.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loader">
+    <div id="loader-logo">Gems❄️</div>
+    <div class="loader-bar" id="loaderBar"></div>
+  </div>
+
+  <div id="cursor"></div>
+
+  <div class="login-container" id="loginBox">
+    <h1 class="login-title">Admin</h1>
+    <p class="login-subtitle">Accès sécurisé – Gems Dashboard</p>
+
+    <form id="loginForm">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="ex: marcrosaire2@gmail.com" required autocomplete="email" inputmode="email">
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input type="password" id="password" placeholder="••••••••" required autocomplete="current-password">
+      </div>
+
+      <button type="button" class="login-btn" id="btn-login" onclick="seConnecter()">Se connecter</button>
+    </form>
+
+    <p id="message"></p>
+  </div>
+
+  <script>
+    const SB_URL = "https://antifrphxjyaylklsijh.supabase.co";
+    const SB_KEY = "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl";
+    const supabaseClient = supabase.createClient(SB_URL, SB_KEY);
+
+    // Loader + apparition formulaire
+    window.addEventListener('load', () => {
+      document.getElementById('loaderBar').style.width = '100%';
+      setTimeout(() => {
+        document.getElementById('loader').style.transform = 'translateY(-100%)';
+        document.getElementById('loginBox').classList.add('visible');
+      }, 1200);
+    });
+
+    // Curseur desktop only
+    if (window.innerWidth > 767) {
+      const cursor = document.getElementById('cursor');
+      document.addEventListener('mousemove', e => {
+        cursor.style.left = (e.clientX - 8) + 'px';
+        cursor.style.top  = (e.clientY - 8) + 'px';
+      });
+    }
+
+    async function seConnecter() {
+      const email = document.getElementById('email').value.trim();
+      const password = document.getElementById('password').value;
+      const msg = document.getElementById('message');
+      const btn = document.getElementById('btn-login');
+
+      if (!email || !password) {
+        msg.className = "error";
+        msg.innerText = "Remplissez tous les champs.";
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerText = "Connexion...";
+      msg.innerText = "";
+
+      try {
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
+          email,
+          password
+        });
+
+        if (error) {
+          msg.className = "error";
+          msg.innerText = error.message.includes("Invalid login credentials")
+            ? "Email ou mot de passe incorrect."
+            : "Erreur : " + error.message;
+        } else {
+          msg.className = "success";
+          msg.innerText = "Connexion réussie. Redirection...";
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1200);
+        }
+      } catch (err) {
+        msg.className = "error";
+        msg.innerText = "Problème de connexion. Vérifiez votre réseau.";
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Se connecter";
+      }
+    }
+  </script>
+</body>
+</html>

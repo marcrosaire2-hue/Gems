@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Gems❄️ | Annonces & Actualités</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #ffffff;
+            --text: #1d1d1f;
+            --text-secondary: #6e6e73;
+            --accent: #0071e3;
+            --glass: rgba(255, 255, 255, 0.82);
+            --border: rgba(0, 0, 0, 0.12);
+            --shadow: 0 20px 50px rgba(0,0,0,0.10);
+            --transition: all 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+            --neon-glow: 0 0 18px rgba(10, 132, 255, 0.55);
+        }
+
+        .dark-mode {
+            --bg: #000000;
+            --text: #f5f5f7;
+            --text-secondary: #8e8e93;
+            --accent: #0a84ff;
+            --glass: rgba(30, 30, 32, 0.82);
+            --border: rgba(255, 255, 255, 0.14);
+            --shadow: 0 20px 50px rgba(0,0,0,0.45);
+            --neon-glow: 0 0 22px rgba(10, 132, 255, 0.75);
+        }
+
+        * { margin:0; padding:0; box-sizing:border-box; }
+
+        body {
+            background:var(--bg);
+            color:var(--text);
+            font-family:'Inter',system-ui,sans-serif;
+            min-height:100vh;
+            -webkit-font-smoothing:antialiased;
+            -moz-osx-font-smoothing:grayscale;
+            overflow-x:hidden;
+            background-image:url('m11.jpg');
+            background-size:cover;
+            background-position:center;
+            background-attachment:fixed;
+        }
+
+        body::before {
+            content:"";
+            position:fixed;
+            inset:0;
+            background:rgba(0,0,0,0.50);
+            z-index:-2;
+            pointer-events:none;
+        }
+
+        /* Loader */
+        #loader {
+            position:fixed; inset:0; z-index:9999;
+            background:#000;
+            display:flex; flex-direction:column; justify-content:center; align-items:center;
+            transition:transform 1s cubic-bezier(0.9,0,0.1,1);
+        }
+
+        #loader-logo {
+            color:white; font-size:clamp(2.8rem,12vw,4.5rem); font-weight:900; letter-spacing:10px;
+            animation:pulse 2.8s infinite ease-in-out;
+        }
+
+        @keyframes pulse { 0%,100% {opacity:0.5; transform:scale(0.95);} 50% {opacity:1; transform:scale(1.03);} }
+
+        .loader-bar { width:0; height:3px; background:var(--accent); position:absolute; bottom:0; left:0; transition:width 0.8s ease; }
+
+        /* Cursor desktop only */
+        #cursor {
+            width:14px; height:14px; background:var(--text); border-radius:50%;
+            position:fixed; pointer-events:none; z-index:9998;
+            mix-blend-mode:difference; transition:transform 0.12s ease-out;
+        }
+
+        /* Navbar – exactement la même que la page principale */
+        nav {
+            position:fixed; top:0; left:0; right:0; z-index:1000;
+            background:var(--glass); backdrop-filter:blur(20px);
+            border-bottom:1px solid var(--border);
+            padding:1rem 5%;
+            display:flex; justify-content:space-between; align-items:center;
+            transform:translateY(-100%); transition:transform 0.9s 0.6s ease;
+        }
+
+        .logo { font-size:clamp(1.4rem,6vw,1.8rem); font-weight:900; letter-spacing:-0.5px; }
+
+        .nav-links {
+            display:flex; gap:2.2rem;
+        }
+
+        .nav-links a {
+            color:var(--text);
+            text-decoration:none;
+            font-weight:500;
+            font-size:0.95rem;
+            letter-spacing:0.4px;
+            transition:all 0.4s ease;
+            position:relative;
+        }
+
+        .nav-links a:hover {
+            color:var(--accent);
+            text-shadow:var(--neon-glow);
+        }
+
+        .nav-links a::after {
+            content:''; position:absolute; bottom:-5px; left:0; width:0; height:1.5px;
+            background:var(--accent); transition:width 0.4s ease;
+        }
+
+        .nav-links a:hover::after { width:100%; }
+
+        .btn-theme {
+            background:transparent; border:1px solid var(--border);
+            color:var(--text); padding:0.6rem 1.3rem; border-radius:999px;
+            font-size:0.85rem; font-weight:600; transition:all 0.4s ease;
+        }
+
+        .btn-theme:hover { background:var(--accent); color:white; border-color:var(--accent); }
+
+        /* Contenu principal */
+        .hero {
+            min-height:50vh; display:flex; flex-direction:column;
+            justify-content:center; align-items:center; text-align:center;
+            padding:8rem 5% 4rem;
+        }
+
+        .hero h1 {
+            font-size:clamp(3.5rem,12vw,7rem); font-weight:900; letter-spacing:-0.05em;
+            line-height:0.95; margin-bottom:1rem;
+            background:linear-gradient(90deg,var(--text) 40%,var(--accent) 70%,var(--text) 100%);
+            -webkit-background-clip:text; background-clip:text;
+            -webkit-text-fill-color:transparent;
+        }
+
+        .hero p {
+            font-size:clamp(1.1rem,4vw,1.4rem); color:var(--text-secondary); max-width:700px;
+        }
+
+        .annonces-container {
+            max-width:1400px; margin:0 auto; padding:0 5% 6rem;
+        }
+
+        .annonce-grid {
+            display:grid; grid-template-columns:1fr; gap:3rem;
+        }
+
+        .annonce-card {
+            background:var(--glass); backdrop-filter:blur(16px);
+            border:1px solid var(--border); border-radius:24px;
+            overflow:hidden; box-shadow:var(--shadow);
+            opacity:0; transform:translateY(60px); transition:var(--transition);
+        }
+
+        .annonce-card.visible { opacity:1; transform:translateY(0); }
+
+        .annonce-card:hover { transform:translateY(-8px); box-shadow:0 30px 70px rgba(0,0,0,0.25); }
+
+        .annonce-img-wrapper {
+            position:relative; height:clamp(300px,60vw,480px); overflow:hidden;
+        }
+
+        .annonce-card img {
+            width:100%; height:100%; object-fit:cover;
+            transition:transform 1.4s ease;
+        }
+
+        .annonce-card:hover img { transform:scale(1.05); }
+
+        .annonce-body {
+            padding:2rem 1.8rem; text-align:center;
+        }
+
+        .annonce-date {
+            color:var(--text-secondary); font-size:0.85rem; font-weight:500;
+            text-transform:uppercase; letter-spacing:1px; margin-bottom:1rem;
+        }
+
+        .annonce-body h2 {
+            font-size:1.8rem; font-weight:800; margin:0 0 1.2rem;
+            line-height:1.2;
+        }
+
+        .annonce-body p {
+            color:var(--text-secondary); font-size:1.05rem; line-height:1.7;
+        }
+
+        @media (min-width:768px) {
+            #cursor { display:block; }
+            .annonce-grid { grid-template-columns:repeat(auto-fill,minmax(420px,1fr)); gap:4rem 3rem; }
+            .hero { min-height:60vh; padding-top:12rem; }
+        }
+
+        @media (min-width:1024px) {
+            .annonces-container { padding:0 6% 8rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div id="loader-logo">Gems❄️</div>
+        <div class="loader-bar" id="loaderBar"></div>
+    </div>
+
+    <div id="cursor"></div>
+
+    <nav id="navbar">
+        <div class="logo">Gems❄️</div>
+        <div class="nav-links">
+            <a href="apropos.html">À propos</a>
+            <a href="contact.html">Contact</a>
+            <a href="index.html" class="catalogue-btn">Catalogue</a>
+        </div>
+        <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">DARK</button>
+    </nav>
+
+    <section class="hero">
+        <h1>Annonces & Actualités</h1>
+        <p>Restez informé des dernières exclusivités et nouveautés Dark pleasure Collection 2026</p>
+    </section>
+
+    <div class="annonces-container">
+        <div class="annonce-grid" id="annonces-list"></div>
+    </div>
+
+    <script>
+         const SB_URL = "https://antifrphxjyaylklsijh.supabase.co";
+        const SB_KEY = "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl";
+        const nexa = supabase.createClient(SB_URL, SB_KEY);
+
+        // Loader
+        window.addEventListener('load', () => {
+            document.getElementById('loaderBar').style.width = '100%';
+            setTimeout(() => {
+                document.getElementById('loader').style.transform = 'translateY(-100%)';
+                document.body.style.overflow = 'auto';
+                document.getElementById('navbar').style.transform = 'translateY(0)';
+            }, 1000);
+        });
+
+        // Cursor desktop only
+        if (window.innerWidth > 767) {
+            const cursor = document.getElementById('cursor');
+            document.addEventListener('mousemove', e => {
+                cursor.style.left = e.clientX - 7 + 'px';
+                cursor.style.top  = e.clientY - 7 + 'px';
+            });
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            document.body.classList.toggle('dark-mode');
+            document.getElementById('themeBtn').textContent = 
+                document.body.classList.contains('dark-mode') ? 'LIGHT' : 'DARK';
+        }
+
+        // Charger uniquement les annonces
+        async function chargerAnnonces() {
+            const { data, error } = await nexa
+                .from('produits')
+                .select('*')
+                .eq('type', 'annonce')
+                .order('created_at', { ascending: false });
+
+            const container = document.getElementById('annonces-list');
+            container.innerHTML = '';
+
+            if (error) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">Erreur lors du chargement.</p>';
+                return;
+            }
+
+            if (!data || data.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">Aucune annonce pour le moment.</p>';
+                return;
+            }
+
+            data.forEach(item => {
+                const dateStr = new Date(item.created_at).toLocaleDateString('fr-FR', {
+                    day: 'numeric', month: 'long', year: 'numeric'
+                });
+
+                container.innerHTML += `
+                    <div class="annonce-card">
+                        ${item.image_url ? `
+                            <div class="annonce-img-wrapper">
+                                <img src="${item.image_url}" alt="${item.titre || 'Annonce'}" loading="lazy">
+                            </div>
+                        ` : ''}
+                        <div class="annonce-body">
+                            <div class="annonce-date">${dateStr}</div>
+                            <h2>${item.titre || 'Annonce sans titre'}</h2>
+                            <p>${item.description || item.prix || 'Aucune description disponible.'}</p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            // Observer pour apparition progressive
+            const observer = new IntersectionObserver(entries => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.annonce-card').forEach(card => observer.observe(card));
+        }
+
+        chargerAnnonces();
+    </script>
+</body>
+</html>

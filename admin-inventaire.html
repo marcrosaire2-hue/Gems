@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Gems❄️ | Inventaire Global</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --bg: #0a0a0a;
+      --text: #f5f5f7;
+      --text-secondary: #a1a1a6;
+      --accent: #0a84ff;
+      --glass: rgba(40, 40, 45, 0.88);
+      --border: rgba(255, 255, 255, 0.14);
+      --shadow: 0 10px 30px rgba(0,0,0,0.6);
+      --transition: all 0.4s ease;
+      --neon-glow: 0 0 16px rgba(10, 132, 255, 0.6);
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      background-image: url('m7.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      touch-action: manipulation;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.75);
+      z-index: -2;
+    }
+
+    /* Loader */
+    #loader {
+      position: fixed; inset: 0; z-index: 9999;
+      background: #000;
+      display: flex; flex-direction: column; justify-content: center; align-items: center;
+      transition: transform 0.9s ease;
+    }
+
+    #loader-logo {
+      color: white;
+      font-size: clamp(2.6rem, 13vw, 5rem);
+      font-weight: 900;
+      letter-spacing: 9px;
+      animation: pulse 2.5s infinite ease-in-out;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.6; transform: scale(0.96); }
+      50%      { opacity: 1;   transform: scale(1.03); }
+    }
+
+    .loader-bar {
+      width: 0; height: 4px; background: var(--accent);
+      position: absolute; bottom: 0; left: 0;
+      transition: width 0.9s ease;
+    }
+
+    /* Curseur desktop only */
+    #cursor {
+      width: 14px; height: 14px; background: var(--text); border-radius: 50%;
+      position: fixed; pointer-events: none; z-index: 9998;
+      mix-blend-mode: difference; transition: transform 0.12s ease-out;
+      display: none;
+    }
+
+    /* Navbar – burger only sur mobile */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
+      background: var(--glass); backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.9rem 5%;
+      display: flex; justify-content: space-between; align-items: center;
+      transform: translateY(-100%); transition: transform 0.7s 0.4s ease;
+    }
+
+    .logo {
+      font-size: clamp(1.5rem, 6.5vw, 2rem);
+      font-weight: 900;
+      letter-spacing: -0.8px;
+      background: linear-gradient(90deg, var(--text) 40%, var(--accent) 70%, var(--text) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 2rem;
+      cursor: pointer;
+      padding: 0.6rem;
+      border-radius: 12px;
+      transition: var(--transition);
+    }
+
+    .menu-toggle:active {
+      background: rgba(255,255,255,0.1);
+    }
+
+    /* Liens desktop cachés sur mobile */
+    .nav-links-desktop {
+      display: none;
+      gap: 1rem;
+    }
+
+    .nav-link {
+      padding: 0.7rem 1.2rem;
+      border-radius: 999px;
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: clamp(0.9rem, 3.8vw, 1rem);
+      transition: var(--transition);
+      white-space: nowrap;
+    }
+
+    .nav-link:hover, .nav-link.active {
+      background: var(--accent);
+      color: white;
+      box-shadow: 0 0 18px rgba(10,132,255,0.4);
+    }
+
+    /* Menu burger mobile plein écran */
+    .nav-menu-mobile {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.94);
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2.2rem;
+      transform: translateY(-100%);
+      transition: transform 0.5s ease;
+      z-index: 999;
+    }
+
+    .nav-menu-mobile.open {
+      transform: translateY(0);
+    }
+
+    .nav-menu-mobile .nav-link,
+    .nav-menu-mobile .logout-btn,
+    .nav-menu-mobile .btn-theme {
+      font-size: 1.4rem;
+      padding: 1.2rem 3rem;
+      min-width: 260px;
+      text-align: center;
+    }
+
+    .close-menu {
+      position: absolute;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2.5rem;
+      cursor: pointer;
+    }
+
+    .logout-btn {
+      background: #ff4d4d;
+      color: white;
+      border: none;
+      padding: 1rem 2rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 1.3rem;
+      cursor: pointer;
+      min-width: 220px;
+    }
+
+    .logout-btn:active {
+      background: #ff3333;
+      transform: scale(0.97);
+    }
+
+    .btn-theme {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 1rem 2rem;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 1.3rem;
+      min-width: 220px;
+    }
+
+    .btn-theme:active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    /* Main content */
+    main {
+      margin-top: 80px;
+      padding: 2rem 5% 4rem;
+      max-width: 1400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 10vw, 4.2rem);
+      font-weight: 900;
+      margin-bottom: 2rem;
+      background: linear-gradient(90deg, var(--text) 40%, var(--accent) 70%, var(--text) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      text-align: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 2rem;
+    }
+
+    .card {
+      background: var(--glass);
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      transition: var(--transition);
+    }
+
+    .card:active {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    }
+
+    .card-img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      background: #111;
+    }
+
+    .card-body {
+      padding: 1.6rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .badge {
+      padding: 0.5rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-prod { background: rgba(10,132,255,0.15); color: var(--accent); border: 1px solid rgba(10,132,255,0.3); }
+    .badge-ann { background: rgba(255,149,0,0.15); color: #ff9500; border: 1px solid rgba(255,149,0,0.3); }
+
+    .card-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 0.6rem;
+    }
+
+    .card-price {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+
+    .card-desc {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin-bottom: 1.4rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .btn-delete {
+      background: rgba(255,69,58,0.9);
+      color: white;
+      border: none;
+      width: 100%;
+      padding: 1rem;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: var(--transition);
+      min-height: 52px;
+    }
+
+    .btn-delete:active {
+      background: #ff3333;
+      transform: scale(0.97);
+    }
+
+    .empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      color: var(--text-secondary);
+      padding: 5rem 2rem;
+      border: 2px dashed var(--border);
+      border-radius: 20px;
+      font-size: 1.2rem;
+    }
+
+    /* Responsive */
+    @media (min-width: 769px) {
+      #cursor { display: block; }
+      nav { flex-direction: row; justify-content: space-between; }
+      .nav-links-desktop { display: flex; }
+      .menu-toggle { display: none; }
+      .nav-menu-mobile { display: none; }
+      main { margin-top: 100px; padding: 3rem 5%; }
+    }
+
+    @media (max-width: 768px) {
+      .nav-links-desktop { display: none; }
+      .menu-toggle { display: block; }
+      main { margin-top: 80px; padding: 2rem 6% 4rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div id="loader">
+    <div id="loader-logo">Gems❄️</div>
+    <div class="loader-bar" id="loaderBar"></div>
+  </div>
+
+  <div id="cursor"></div>
+
+  <nav id="navbar">
+    <div class="logo">Gems❄️</div>
+
+    <div class="nav-right">
+      <button class="menu-toggle" id="menuToggle">☰</button>
+    </div>
+  </nav>
+
+  <!-- Menu burger mobile (tout y est) -->
+  <div class="nav-menu-mobile" id="mobileMenu">
+    <button class="close-menu" id="closeMenu">✕</button>
+
+    <a href="dashboard.html" class="nav-link">Nouveau Produit</a>
+    <a href="admin-annonces.html" class="nav-link">Nouvelle Annonce</a>
+    <a href="admin-inventaire.html" class="nav-link active">Mes Publications</a>
+    <a href="admin-historique.html" class="nav-link">Historique</a>
+
+    <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">DARK</button>
+    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+  </div>
+
+  <main>
+    <h1>Gestion de l'Inventaire</h1>
+
+    <div style="text-align:right; margin-bottom:1.5rem;">
+      <button onclick="chargerInventaire()" class="btn-theme" style="padding:0.8rem 1.6rem;">
+        🔄 Actualiser
+      </button>
+    </div>
+
+    <div id="grid-container" class="grid">
+      <div class="empty-state">Chargement des publications...</div>
+    </div>
+  </main>
+
+  <script>
+    // Loader + navbar apparition
+    window.addEventListener('load', () => {
+      document.getElementById('loaderBar').style.width = '100%';
+      setTimeout(() => {
+        document.getElementById('loader').style.transform = 'translateY(-100%)';
+        document.getElementById('navbar').style.transform = 'translateY(0)';
+      }, 1200);
+    });
+
+    // Curseur desktop only
+    if (window.innerWidth > 767) {
+      const cursor = document.getElementById('cursor');
+      document.addEventListener('mousemove', e => {
+        cursor.style.left = (e.clientX - 8) + 'px';
+        cursor.style.top  = (e.clientY - 8) + 'px';
+      });
+    }
+
+    // Burger menu toggle
+    const menuToggle = document.getElementById('menuToggle');
+    const closeMenu = document.getElementById('closeMenu');
+    const mobileMenu = document.getElementById('mobileMenu');
+
+    menuToggle.addEventListener('click', () => {
+      mobileMenu.classList.add('open');
+    });
+
+    closeMenu.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+    });
+
+    mobileMenu.addEventListener('click', (e) => {
+      if (e.target === mobileMenu) mobileMenu.classList.remove('open');
+    });
+
+    // Dark / Light mode
+    function toggleTheme() {
+      document.body.classList.toggle('dark-mode');
+      document.getElementById('themeBtn').textContent = 
+        document.body.classList.contains('dark-mode') ? 'LIGHT' : 'DARK';
+    }
+
+    // Déconnexion
+    function logout() {
+      nexa.auth.signOut().then(() => {
+        window.location.href = "login.html";
+      });
+    }
+
+    // ────────────────────────────────────────────────
+    // TON CODE INVENTAIRE – INCHANGÉ
+    // ────────────────────────────────────────────────
+    const SB_URL = "https://antifrphxjyaylklsijh.supabase.co";
+    const SB_KEY = "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl";
+    const nexa = supabase.createClient(SB_URL, SB_KEY);
+
+    async function chargerInventaire() {
+      const container = document.getElementById('grid-container');
+      container.innerHTML = '<div class="empty-state">Chargement des publications...</div>';
+
+      const { data, error } = await nexa
+        .from('produits')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        container.innerHTML = `<div class="empty-state" style="color:#ff4d4d">Erreur : ${error.message}</div>`;
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        container.innerHTML = `<div class="empty-state">Aucune publication trouvée.<br>Ajoutez un produit ou une annonce pour commencer.</div>`;
+        return;
+      }
+
+      container.innerHTML = '';
+
+      data.forEach(item => {
+        const type = item.type || 'produit';
+        const isAnnonce = type === 'annonce';
+
+        const badgeClass = isAnnonce ? 'badge-ann' : 'badge-prod';
+        const badgeText = isAnnonce ? 'PUBLICITÉ' : 'PRODUIT';
+
+        const priceHtml = isAnnonce 
+          ? '<span style="font-size:0.9rem; color:var(--text-secondary);">Diffusion active</span>' 
+          : `<span class="card-price">${item.prix || 'Prix sur demande'}</span>`;
+
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <img src="${item.image_url}" class="card-img" onerror="this.src='https://via.placeholder.com/400x220?text=Image+Introuvable'">
+          <div class="card-body">
+            <div class="card-header">
+              <span class="badge ${badgeClass}">${badgeText}</span>
+              <span style="font-size:0.85rem; color:var(--text-secondary);">
+                ${new Date(item.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+              </span>
+            </div>
+            <h3 class="card-title">${item.titre}</h3>
+            ${priceHtml}
+            <p class="card-desc">${item.description || 'Aucune description disponible'}</p>
+            <button class="btn-delete" onclick="supprimer('${item.id}')">Supprimer</button>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    async function supprimer(id) {
+      if (confirm("⚠️ Cette action est irréversible.\nConfirmer la suppression ?")) {
+        const { error } = await nexa.from('produits').delete().eq('id', id);
+        if (error) {
+          alert("Erreur : " + error.message);
+        } else {
+          chargerInventaire();
+        }
+      }
+    }
+
+    // Chargement initial
+    chargerInventaire();
+  </script>
+</body>
+</html>
