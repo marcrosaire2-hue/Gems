@@ -52,33 +52,6 @@
       pointer-events: none;
     }
 
-    /* Loader */
-    #loader {
-      position: fixed; inset: 0; z-index: 9999;
-      background: #000;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: transform 0.9s ease;
-    }
-
-    #loader-logo {
-      color: white;
-      font-size: clamp(2.4rem, 12vw, 4.2rem);
-      font-weight: 900;
-      letter-spacing: 8px;
-      animation: pulse 2.6s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; transform: scale(0.96); }
-      50%      { opacity: 1;   transform: scale(1.02); }
-    }
-
-    .loader-bar {
-      width: 0; height: 3px; background: var(--accent);
-      position: absolute; bottom: 0; left: 0;
-      transition: width 0.9s ease;
-    }
-
     /* Curseur desktop only */
     #cursor {
       width: 14px; height: 14px; background: var(--text); border-radius: 50%;
@@ -272,11 +245,6 @@
 </head>
 <body>
 
-  <div id="loader">
-    <div id="loader-logo">Gems❄️</div>
-    <div class="loader-bar" id="loaderBar"></div>
-  </div>
-
   <div id="cursor"></div>
 
   <nav id="navbar">
@@ -344,12 +312,8 @@
   <script>
     // Loader + navbar apparition
     window.addEventListener('load', () => {
-      document.getElementById('loaderBar').style.width = '100%';
-      setTimeout(() => {
-        document.getElementById('loader').style.transform = 'translateY(-100%)';
-        document.body.style.overflow = 'auto';
-        document.getElementById('navbar').style.transform = 'translateY(0)';
-      }, 900);
+      document.body.style.overflow = 'auto';
+      document.getElementById('navbar').style.transform = 'translateY(0)';
     });
 
     // Curseur desktop only

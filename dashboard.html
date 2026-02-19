@@ -20,9 +20,7 @@
       --transition: all 0.4s ease;
       --neon-glow: 0 0 16px rgba(10, 132, 255, 0.6);
     }
-
     * { margin:0; padding:0; box-sizing:border-box; }
-
     body {
       background: var(--bg);
       color: var(--text);
@@ -34,7 +32,6 @@
       background-attachment: fixed;
       touch-action: manipulation;
     }
-
     body::before {
       content: "";
       position: fixed;
@@ -42,34 +39,6 @@
       background: rgba(0,0,0,0.75);
       z-index: -2;
     }
-
-    /* Loader */
-    #loader {
-      position: fixed; inset: 0; z-index: 9999;
-      background: #000;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      transition: transform 0.9s ease;
-    }
-
-    #loader-logo {
-      color: white;
-      font-size: clamp(2.6rem, 13vw, 5rem);
-      font-weight: 900;
-      letter-spacing: 9px;
-      animation: pulse 2.5s infinite ease-in-out;
-    }
-
-    @keyframes pulse {
-      0%, 100% { opacity: 0.6; transform: scale(0.96); }
-      50%      { opacity: 1;   transform: scale(1.03); }
-    }
-
-    .loader-bar {
-      width: 0; height: 4px; background: var(--accent);
-      position: absolute; bottom: 0; left: 0;
-      transition: width 0.9s ease;
-    }
-
     /* Curseur desktop only */
     #cursor {
       width: 14px; height: 14px; background: var(--text); border-radius: 50%;
@@ -77,7 +46,6 @@
       mix-blend-mode: difference; transition: transform 0.12s ease-out;
       display: none;
     }
-
     /* Navbar – burger only sur mobile */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
@@ -85,9 +53,7 @@
       border-bottom: 1px solid var(--border);
       padding: 0.9rem 5%;
       display: flex; justify-content: space-between; align-items: center;
-      transform: translateY(-100%); transition: transform 0.7s 0.4s ease;
     }
-
     .logo {
       font-size: clamp(1.5rem, 6.5vw, 2rem);
       font-weight: 900;
@@ -97,13 +63,11 @@
       background-clip: text;
       -webkit-text-fill-color: transparent;
     }
-
     .nav-right {
       display: flex;
       align-items: center;
       gap: 1rem;
     }
-
     .menu-toggle {
       background: none;
       border: none;
@@ -115,17 +79,14 @@
       transition: var(--transition);
       display: block; /* toujours visible sur mobile */
     }
-
     .menu-toggle:active {
       background: rgba(255,255,255,0.1);
     }
-
     /* Liens desktop (cachés sur mobile) */
     .nav-links-desktop {
       display: none;
       gap: 1rem;
     }
-
     .nav-link {
       padding: 0.7rem 1.2rem;
       border-radius: 999px;
@@ -136,13 +97,11 @@
       transition: var(--transition);
       white-space: nowrap;
     }
-
     .nav-link:hover, .nav-link.active {
       background: var(--accent);
       color: white;
       box-shadow: 0 0 18px rgba(10,132,255,0.4);
     }
-
     /* Menu mobile plein écran */
     .nav-menu-mobile {
       position: fixed;
@@ -158,11 +117,9 @@
       transition: transform 0.5s ease;
       z-index: 999;
     }
-
     .nav-menu-mobile.open {
       transform: translateY(0);
     }
-
     .nav-menu-mobile .nav-link,
     .nav-menu-mobile .logout-btn,
     .nav-menu-mobile .btn-theme {
@@ -171,7 +128,6 @@
       min-width: 260px;
       text-align: center;
     }
-
     .close-menu {
       position: absolute;
       top: 1.5rem;
@@ -182,7 +138,6 @@
       font-size: 2.5rem;
       cursor: pointer;
     }
-
     .logout-btn {
       background: #ff4d4d;
       color: white;
@@ -194,12 +149,10 @@
       cursor: pointer;
       min-width: 220px;
     }
-
     .logout-btn:active {
       background: #ff3333;
       transform: scale(0.97);
     }
-
     .btn-theme {
       background: transparent;
       border: 1px solid var(--border);
@@ -210,13 +163,11 @@
       font-size: 1.3rem;
       min-width: 220px;
     }
-
     .btn-theme:active {
       background: var(--accent);
       color: white;
       border-color: var(--accent);
     }
-
     /* Main content */
     main {
       margin-top: 80px;
@@ -225,7 +176,6 @@
       margin-left: auto;
       margin-right: auto;
     }
-
     h1 {
       font-size: clamp(2.4rem, 10vw, 4.2rem);
       font-weight: 900;
@@ -236,7 +186,6 @@
       -webkit-text-fill-color: transparent;
       text-align: center;
     }
-
     .form-card {
       background: var(--glass);
       backdrop-filter: blur(20px);
@@ -245,11 +194,9 @@
       padding: 2.2rem 1.8rem;
       box-shadow: var(--shadow);
     }
-
     .form-group {
       margin-bottom: 1.6rem;
     }
-
     label {
       display: block;
       margin-bottom: 0.6rem;
@@ -257,7 +204,6 @@
       font-size: clamp(0.95rem, 3.8vw, 1.05rem);
       color: var(--text-secondary);
     }
-
     input, textarea {
       width: 100%;
       padding: 1.1rem 1.3rem;
@@ -268,15 +214,12 @@
       font-size: clamp(1rem, 4vw, 1.1rem);
       min-height: 52px;
     }
-
     input:focus, textarea:focus {
       outline: none;
       border-color: var(--accent);
       box-shadow: 0 0 0 4px rgba(10,132,255,0.25);
     }
-
     textarea { min-height: 140px; resize: vertical; }
-
     #file {
       padding: 0.8rem;
       background: rgba(255,255,255,0.05);
@@ -286,7 +229,6 @@
       color: var(--text);
       font-size: 1rem;
     }
-
     .btn-publier {
       background: var(--accent);
       color: white;
@@ -301,11 +243,9 @@
       margin-top: 1.5rem;
       min-height: 56px;
     }
-
     .btn-publier:active {
       transform: translateY(2px) scale(0.97);
     }
-
     #status {
       margin-top: 1.5rem;
       font-size: clamp(0.95rem, 3.8vw, 1.05rem);
@@ -313,81 +253,52 @@
       text-align: center;
       min-height: 1.5rem;
     }
-
     .success { color: #34d399; }
     .error { color: #ff4d4d; }
   </style>
 </head>
 <body>
-
-  <div id="loader">
-    <div id="loader-logo">Gems❄️</div>
-    <div class="loader-bar" id="loaderBar"></div>
-  </div>
-
   <div id="cursor"></div>
-
   <nav id="navbar">
     <div class="logo">Gems❄️</div>
-
     <div class="nav-right">
       <button class="menu-toggle" id="menuToggle">☰</button>
     </div>
   </nav>
-
   <!-- Menu burger mobile -->
   <div class="nav-menu-mobile" id="mobileMenu">
     <button class="close-menu" id="closeMenu">✕</button>
-
     <a href="dashboard.html" class="nav-link active">Nouveau Produit</a>
     <a href="admin-annonces.html" class="nav-link">Nouvelle Annonce</a>
     <a href="admin-inventaire.html" class="nav-link">Mes Publications</a>
     <a href="admin-historique.html" class="nav-link">Historique</a>
-
     <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">DARK</button>
     <button class="logout-btn" onclick="logout()">Déconnexion</button>
   </div>
-
   <main>
     <h1>Publier un Produit</h1>
-
     <div class="form-card">
       <div class="form-group">
         <label for="titre">Nom du produit</label>
         <input type="text" id="titre" placeholder="Ex: Chaussure NEXA Lumière 2026">
       </div>
-
       <div class="form-group">
         <label for="prix">Prix</label>
         <input type="text" id="prix" placeholder="Ex: 150.000 FCFA">
       </div>
-
       <div class="form-group">
         <label for="desc">Description</label>
         <textarea id="desc" rows="5" placeholder="Détails du produit, matériaux, taille, couleur..."></textarea>
       </div>
-
       <div class="form-group">
         <label for="file">Photo du produit</label>
         <input type="file" id="file" accept="image/*">
       </div>
-
       <button class="btn-publier" onclick="publier()">Mettre en ligne</button>
-
       <div id="status"></div>
     </div>
   </main>
-
   <script>
-    // Loader + navbar apparition
-    window.addEventListener('load', () => {
-      document.getElementById('loaderBar').style.width = '100%';
-      setTimeout(() => {
-        document.getElementById('loader').style.transform = 'translateY(-100%)';
-        document.getElementById('navbar').style.transform = 'translateY(0)';
-      }, 1200);
-    });
-
     // Curseur desktop only
     if (window.innerWidth > 767) {
       const cursor = document.getElementById('cursor');
@@ -396,70 +307,55 @@
         cursor.style.top  = (e.clientY - 8) + 'px';
       });
     }
-
     // Burger menu
     const menuToggle = document.getElementById('menuToggle');
     const closeMenu = document.getElementById('closeMenu');
     const mobileMenu = document.getElementById('mobileMenu');
-
     menuToggle.addEventListener('click', () => {
       mobileMenu.classList.add('open');
     });
-
     closeMenu.addEventListener('click', () => {
       mobileMenu.classList.remove('open');
     });
-
     // Fermer si clic en dehors
     mobileMenu.addEventListener('click', (e) => {
       if (e.target === mobileMenu) mobileMenu.classList.remove('open');
     });
-
     // Dark / Light mode
     function toggleTheme() {
       document.body.classList.toggle('dark-mode');
-      document.getElementById('themeBtn').textContent = 
+      document.getElementById('themeBtn').textContent =
         document.body.classList.contains('dark-mode') ? 'LIGHT' : 'DARK';
     }
-
     // Déconnexion
     function logout() {
       nexa.auth.signOut().then(() => {
         window.location.href = "login.html";
       });
     }
-
     // ────────────────────────────────────────────────
     // TON CODE PUBLIER – INCHANGÉ
     // ────────────────────────────────────────────────
     const SB_URL = "https://antifrphxjyaylklsijh.supabase.co";
     const SB_KEY = "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl";
     const nexa = supabase.createClient(SB_URL, SB_KEY);
-
     async function publier() {
       const titre = document.getElementById('titre').value;
       const file = document.getElementById('file').files[0];
       const status = document.getElementById('status');
-
       if (!titre || !file) return alert("Le titre et l'image sont obligatoires !");
-
       status.style.display = "block";
       status.innerText = "1/2 - Téléchargement de l'image...";
-
       try {
         const fileName = `prod_${Date.now()}_${file.name.replace(/\s/g, '_')}`;
         const { data: upData, error: upErr } = await nexa.storage
           .from('photos-boutique')
           .upload(fileName, file);
-
         if (upErr) throw upErr;
-
         const { data: { publicUrl } } = nexa.storage
           .from('photos-boutique')
           .getPublicUrl(fileName);
-
         status.innerText = "2/2 - Enregistrement en base de données...";
-
         const { error: insErr } = await nexa.from('produits').insert([{
           titre: titre,
           prix: document.getElementById('prix').value,
@@ -467,12 +363,9 @@
           image_url: publicUrl,
           type: 'produit'
         }]);
-
         if (insErr) throw insErr;
-
         alert("Succès ! Produit publié.");
         window.location.href = "admin-inventaire.html";
-
       } catch (e) {
         alert("Erreur critique : " + e.message);
         console.error(e);
