@@ -16,30 +16,20 @@
       --accent: #0a84ff;
       --glass: rgba(30, 30, 32, 0.88);
       --border: rgba(255, 255, 255, 0.12);
-      --shadow: 0 10px 30px rgba(0,0,0,0.5);
-      --transition: all 0.4s ease;
-      --neon-glow: 0 0 16px rgba(10, 132, 255, 0.6);
     }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+    * { margin:0; padding:0; box-sizing:border-box; }
 
     body {
       background: var(--bg);
       color: var(--text);
       font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
       background-image: url('m1.jpg');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      touch-action: manipulation;
     }
 
     body::before {
@@ -50,17 +40,14 @@
       z-index: -2;
     }
 
-    /* Navbar mobile-first */
     nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 1000;
       background: var(--glass);
       backdrop-filter: blur(16px);
       border-bottom: 1px solid var(--border);
-      padding: 0.9rem 5%;
+      padding: 0.85rem 5%;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -69,63 +56,83 @@
     }
 
     .logo {
-      font-size: clamp(1.4rem, 6vw, 1.7rem);
+      font-size: clamp(1.35rem, 5.8vw, 1.65rem);
       font-weight: 900;
-      letter-spacing: -0.4px;
+      letter-spacing: -0.3px;
     }
 
-    /* Liens desktop (visibles seulement sur grand écran) */
-    .nav-links-desktop {
-      display: flex;
-      gap: 1.6rem;
-    }
-
-    .nav-links-desktop a {
-      color: var(--text);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: clamp(0.95rem, 1.8vw, 1.05rem);
-      padding: 0.6rem 0.4rem;
-      transition: var(--transition);
-    }
-
-    .nav-links-desktop a:hover,
-    .nav-links-desktop a:active {
-      color: var(--accent);
-      text-shadow: var(--neon-glow);
-    }
-
-    /* Burger (visible seulement sur mobile) */
     .menu-toggle {
       background: none;
       border: none;
       color: var(--text);
-      font-size: 2rem;
+      font-size: 1.95rem;
       cursor: pointer;
-      padding: 0.6rem;
-      border-radius: 12px;
-      transition: var(--transition);
-      display: none; /* caché sur desktop */
+      padding: 0.4rem;
+      display: none;
     }
 
-    .menu-toggle:active {
-      background: rgba(255,255,255,0.1);
+    /* Mini-barre Cercle Privé juste après navbar – avec lien Rejoindre */
+    .announce-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      margin-top: 2.8rem;              /* collée à la navbar */
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.35rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      font-size: 0.86rem;
+      flex-wrap: wrap;
     }
 
-    /* Menu burger mobile plein écran */
+    .announce-badge {
+      background: #000;
+      color: #fff;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .announce-text strong {
+      color: var(--accent);
+    }
+
+    .join-link {
+      background: rgba(10,132,255,0.82);
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .join-link:active {
+      background: var(--accent);
+      transform: scale(0.97);
+    }
+
+    /* Menu mobile */
     .nav-menu-mobile {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.94);
-      backdrop-filter: blur(12px);
+      inset: 0;
+      background: rgba(0,0,0,0.96);
+      backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 2.5rem;
+      gap: 2.2rem;
       transform: translateY(-100%);
-      transition: transform 0.5s ease;
-      z-index: 999;
+      transition: transform 0.45s ease;
+      z-index: 998;
     }
 
     .nav-menu-mobile.open {
@@ -133,24 +140,17 @@
     }
 
     .nav-menu-mobile a {
-      font-size: 1.4rem;
-      padding: 1.2rem 3rem;
-      min-width: 260px;
-      text-align: center;
+      font-size: 1.35rem;
+      padding: 1rem 2.5rem;
       color: var(--text);
       text-decoration: none;
       font-weight: 500;
     }
 
-    .nav-menu-mobile a:active {
-      color: var(--accent);
-      transform: scale(0.97);
-    }
-
     .close-menu {
       position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
+      top: 1.2rem;
+      right: 1.2rem;
       background: none;
       border: none;
       color: white;
@@ -158,33 +158,21 @@
       cursor: pointer;
     }
 
-    /* Hero très compact sur mobile */
+    /* Hero */
     .hero {
-      min-height: 60vh;
+      min-height: 42vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       text-align: center;
-      padding: 0 6% 2rem;
-    }
-
-    .collection {
-      text-transform: uppercase;
-      letter-spacing: 4px;
-      font-size: clamp(0.75rem, 3vw, 0.9rem);
-      color: var(--text-secondary);
-      margin-bottom: 1rem;
+      padding: 7.5rem 5% 1.5rem;     /* ajusté pour les deux barres fixes */
     }
 
     .hero h1 {
-      font-size: clamp(3.5rem, 15vw, 8.5rem);
+      font-size: clamp(2.9rem, 13vw, 5.2rem);
       font-weight: 900;
-      line-height: 0.9;
-      letter-spacing: -0.04em;
-      opacity: 0;
-      transform: scale(1.04);
-      transition: all 1.4s 1s cubic-bezier(0.16,1,0.3,1);
+      line-height: 0.92;
       background: linear-gradient(90deg, var(--text) 30%, var(--accent) 70%, var(--text) 100%);
       -webkit-background-clip: text;
       background-clip: text;
@@ -192,144 +180,106 @@
     }
 
     .marketplace-tagline {
-      margin-top: 1.2rem;
-      font-size: clamp(1.1rem, 5vw, 1.5rem);
-      font-weight: 600;
+      margin-top: 1rem;
+      font-size: clamp(0.98rem, 4.2vw, 1.18rem);
       color: var(--accent);
-      letter-spacing: 1px;
-      opacity: 0;
-      animation: fadeIn 1.8s 2.8s forwards;
+      font-weight: 600;
     }
 
-    @keyframes fadeIn { to { opacity: 1; } }
-
-    /* Contenu principal */
+    /* Catalogue */
     .container {
-      padding: 3rem 5% 4rem;
-      max-width: 100%;
+      padding: 1rem 4% 3.5rem;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 1fr;
-      gap: 2rem;
+      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
+      gap: 1rem 0.9rem;
     }
 
-    .card, .announce-card {
+    .card {
       background: var(--glass);
       backdrop-filter: blur(14px);
       border: 1px solid var(--border);
-      border-radius: 20px;
+      border-radius: 12px;
       overflow: hidden;
-      box-shadow: var(--shadow);
       opacity: 0;
-      transform: translateY(30px);
-      transition: all 0.5s ease;
+      transform: translateY(45px) scale(0.97);
+      transition: all 0.68s cubic-bezier(0.22, 1, 0.36, 1);
     }
 
-    .card.visible, .announce-card.visible {
+    .card.visible {
       opacity: 1;
-      transform: translateY(0);
+      transform: translateY(0) scale(1);
     }
+
+    .card:nth-child(odd)  { transition-delay: 0.1s; }
+    .card:nth-child(even) { transition-delay: 0.18s; }
 
     .image-wrapper {
-      position: relative;
-      height: clamp(200px, 60vw, 320px);
+      height: clamp(115px, 36vw, 152px);
       overflow: hidden;
     }
 
-    .card img, .announce-card img {
+    .card img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      transition: transform 0.7s ease;
-    }
-
-    .card:active img, .announce-card:active img {
-      transform: scale(1.06);
     }
 
     .type-badge {
       position: absolute;
-      top: 1rem;
-      left: 1rem;
+      top: 0.55rem; left: 0.55rem;
       background: var(--accent);
       color: white;
-      padding: 0.5rem 1.1rem;
+      padding: 0.28rem 0.75rem;
       border-radius: 999px;
-      font-size: 0.82rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      text-transform: uppercase;
     }
 
-    .announce-badge {
-      background: #000;
-      color: #fff;
-      box-shadow: 0 0 12px rgba(0,0,0,0.6);
-    }
-
-    .card-content, .announce-content {
-      padding: 1.5rem 1.3rem;
+    .card-content {
+      padding: 0.8rem 0.75rem 1.1rem;
       text-align: center;
     }
 
     .card h2 {
-      font-size: 1.4rem;
+      font-size: 0.96rem;
       font-weight: 800;
-      margin-bottom: 0.6rem;
-      line-height: 1.25;
+      margin-bottom: 0.4rem;
     }
 
     .price {
+      font-size: 0.84rem;
       color: var(--text-secondary);
-      font-size: 1.05rem;
-      margin-bottom: 1.2rem;
+      margin-bottom: 0.75rem;
     }
 
-    .card a, .announce-content a {
-      display: inline-block;
+    .card a {
+      padding: 0.62rem 1.25rem;
+      font-size: 0.84rem;
+      min-width: 115px;
       background: var(--accent);
       color: white;
-      padding: 1rem 2rem;
       border-radius: 999px;
       font-weight: 600;
       text-decoration: none;
-      font-size: 1rem;
-      min-width: 160px;
-      transition: var(--transition);
-      touch-action: manipulation;
-      margin: 0.5rem 0;
+      display: inline-block;
     }
 
-    .card a:active, .announce-content a:active {
-      transform: translateY(-2px) scale(0.97);
-      box-shadow: 0 8px 20px rgba(10,132,255,0.4);
-    }
-
-    .announce-content h2 { font-size: 1.6rem; }
-    .announce-content p  { font-size: 1rem; line-height: 1.6; }
-
-    /* Media queries – priorisation mobile */
-    @media (min-width: 480px) {
-      .hero { min-height: 70vh; }
-      .container { padding: 4rem 6% 4rem; }
+    /* Media */
+    @media (max-width: 767px) {
+      .menu-toggle { display: block !important; }
+      .announce-bar { margin-top: 2.7rem; padding: 0.32rem 4%; font-size: 0.84rem; gap: 0.8rem; }
+      .join-link { padding: 0.28rem 0.9rem; font-size: 0.78rem; }
+      .hero { padding-top: 7.2rem; }
     }
 
     @media (min-width: 768px) {
-      .grid {
-        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-        gap: 2.5rem 2rem;
-      }
-      .announce-card { grid-column: 1 / -1; }
-      .nav-links-desktop { display: flex !important; }
-      .menu-toggle { display: none !important; }
-      .nav-menu-mobile { display: none !important; }
-      nav { padding: 1.2rem 7%; }
-    }
-
-    @media (max-width: 767px) {
-      .nav-links-desktop { display: none !important; }
-      .menu-toggle { display: block !important; }
+      nav { padding: 1.05rem 7%; }
+      .announce-bar { margin-top: 3.5rem; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 2rem; }
+      .hero { padding-top: 9.2rem; min-height: 65vh; }
     }
   </style>
 </head>
@@ -337,33 +287,28 @@
 
   <nav id="navbar">
     <div class="logo">Gems❄️</div>
-
-    <div class="nav-right">
-      <!-- Liens visibles uniquement sur desktop -->
-      <div class="nav-links-desktop">
-        <a href="apropos.html">À propos</a>
-        <a href="contact.html">Contact</a>
-        <a href="annonces.html">Annonces</a>
-      </div>
-
-      <!-- Burger visible uniquement sur mobile -->
-      <button class="menu-toggle" id="menuToggle">☰</button>
-    </div>
+    <button class="menu-toggle" id="menuToggle">☰</button>
   </nav>
 
-  <!-- Menu burger mobile -->
+  <!-- Mini-barre avec le lien Rejoindre – c'est ça qui avait disparu -->
+  <div class="announce-bar">
+    <span class="announce-badge">PRIVÉ</span>
+    <span class="announce-text"><strong>Le Cercle Privé</strong> – Drops en priorité</span>
+    <a href="https://chat.whatsapp.com/D6BcVIbllGL7Fj6YVqPccP?mode=gi_t" target="_blank" rel="noopener" class="join-link">
+      Rejoindre →
+    </a>
+  </div>
+
   <div class="nav-menu-mobile" id="mobileMenu">
     <button class="close-menu" id="closeMenu">✕</button>
-
     <a href="apropos.html">À propos</a>
     <a href="contact.html">Contact</a>
     <a href="annonces.html">Annonces</a>
   </div>
 
   <section class="hero">
-    <p class="collection">Collection 2026</p>
     <h1 id="heroTitle">Gems❄️</h1>
-    <div class="marketplace-tagline">Découvrez un nouveau monde de produits premium.</div>
+    <div class="marketplace-tagline">Produits premium exclusifs</div>
   </section>
 
   <div class="container">
@@ -378,58 +323,34 @@
     window.addEventListener('load', () => {
       document.body.style.overflow = 'auto';
       document.getElementById('navbar').style.transform = 'translateY(0)';
-      document.getElementById('heroTitle').style.opacity = '1';
-      document.getElementById('heroTitle').style.transform = 'scale(1)';
+      if (document.getElementById('heroTitle')) {
+        document.getElementById('heroTitle').style.opacity = '1';
+      }
     });
 
-    // Burger menu toggle (mobile uniquement)
-    const menuToggle = document.getElementById('menuToggle');
-    const closeMenu = document.getElementById('closeMenu');
-    const mobileMenu = document.getElementById('mobileMenu');
+    // Menu burger
+    const toggle = document.getElementById('menuToggle');
+    const menu = document.getElementById('mobileMenu');
+    const closeBtn = document.getElementById('closeMenu');
 
-    if (menuToggle) {
-      menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.add('open');
+    if (toggle && menu) {
+      toggle.addEventListener('click', () => menu.classList.add('open'));
+    }
+    if (closeBtn && menu) {
+      closeBtn.addEventListener('click', () => menu.classList.remove('open'));
+    }
+    if (menu) {
+      menu.addEventListener('click', e => {
+        if (e.target === menu) menu.classList.remove('open');
       });
     }
 
-    if (closeMenu) {
-      closeMenu.addEventListener('click', () => {
-        mobileMenu.classList.remove('open');
-      });
-    }
+    async function loadProducts() {
+      try {
+        const { data } = await nexa.from('produits').select('*');
+        const sorted = data?.sort((a,b) => a.titre.localeCompare(b.titre, 'fr')) || [];
 
-    if (mobileMenu) {
-      mobileMenu.addEventListener('click', (e) => {
-        if (e.target === mobileMenu) mobileMenu.classList.remove('open');
-      });
-    }
-
-    async function loadNexa() {
-      const { data } = await nexa.from('produits')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      const grid = document.getElementById('main-grid');
-
-      let html = `
-        <div class="announce-card">
-          <div class="image-wrapper">
-            <span class="type-badge announce-badge">ACCÈS PRIVÉ</span>
-            <img src="m10.jpg" alt="Cercle Privé Teaser" loading="lazy">
-          </div>
-          <div class="announce-content">
-            <h2>Le Cercle Privé</h2>
-            <p>Produits exclusifs – 24h max en vitrine.<br>Reçois les drops en priorité.</p>
-            <a href="https://chat.whatsapp.com/D6BcVIbllGL7Fj6YVqPccP?mode=gi_t" target="_blank" rel="noopener">
-              Rejoindre
-            </a>
-          </div>
-        </div> 
-      `;
-
-      if (data && data.length) {
-        html += data.map(item => `
+        const html = sorted.map(item => `
           <div class="card">
             <div class="image-wrapper">
               <span class="type-badge">${item.type || 'Produit'}</span>
@@ -438,26 +359,28 @@
             <div class="card-content">
               <h2>${item.titre}</h2>
               <p class="price">${item.prix ? item.prix + ' FCFA' : 'Sur demande'}</p>
-              <a href=" https://wa.me/2290192878702 par ${encodeURIComponent(item.titre)}" target="_blank" rel="noopener">
+              <a href="https://wa.me/2290192878702?text=${encodeURIComponent('Intéressé par ' + item.titre)}" target="_blank" rel="noopener">
                 DÉCOUVRIR
               </a>
             </div>
           </div>
         `).join('');
+
+        document.getElementById('main-grid').innerHTML = html;
+
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card').forEach(c => observer.observe(c));
+      } catch (err) {
+        console.error("Erreur chargement produits:", err);
       }
-
-      grid.innerHTML = html;
-
-      const observer = new IntersectionObserver(entries => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) entry.target.classList.add('visible');
-        });
-      }, { threshold: 0.15, rootMargin: "0px 0px -100px 0px" });
-
-      document.querySelectorAll('.card, .announce-card').forEach(el => observer.observe(el));
     }
 
-    loadNexa();
+    loadProducts();
   </script>
 </body>
 </html>
