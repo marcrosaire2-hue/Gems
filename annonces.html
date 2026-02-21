@@ -1,295 +1,390 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Gems❄️ | Annonces & Actualités</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Gems❄️ | Annonces & Actualités</title>
 
-    <style>
-        :root {
-            --bg: #ffffff;
-            --text: #1d1d1f;
-            --text-secondary: #6e6e73;
-            --accent: #0071e3;
-            --glass: rgba(255, 255, 255, 0.82);
-            --border: rgba(0, 0, 0, 0.12);
-            --shadow: 0 20px 50px rgba(0,0,0,0.10);
-            --transition: all 0.65s cubic-bezier(0.23, 1, 0.32, 1);
-            --neon-glow: 0 0 18px rgba(10, 132, 255, 0.55);
-        }
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
-        .dark-mode {
-            --bg: #000000;
-            --text: #f5f5f7;
-            --text-secondary: #8e8e93;
-            --accent: #0a84ff;
-            --glass: rgba(30, 30, 32, 0.82);
-            --border: rgba(255, 255, 255, 0.14);
-            --shadow: 0 20px 50px rgba(0,0,0,0.45);
-            --neon-glow: 0 0 22px rgba(10, 132, 255, 0.75);
-        }
+  <style>
+    :root {
+      --bg: #000000;
+      --text: #f5f5f7;
+      --text-secondary: #a0a0a5;
+      --accent: #0a84ff;
+      --glass: rgba(30, 30, 32, 0.88);
+      --border: rgba(255, 255, 255, 0.12);
+      --shadow: 0 10px 30px rgba(0,0,0,0.5);
+    }
 
-        * { margin:0; padding:0; box-sizing:border-box; }
+    * { margin:0; padding:0; box-sizing:border-box; }
 
-        body {
-            background:var(--bg);
-            color:var(--text);
-            font-family:'Inter',system-ui,sans-serif;
-            min-height:100vh;
-            -webkit-font-smoothing:antialiased;
-            -moz-osx-font-smoothing:grayscale;
-            overflow-x:hidden;
-            background-image:url('m11.jpg');
-            background-size:cover;
-            background-position:center;
-            background-attachment:fixed;
-        }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: url('m11.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      touch-action: manipulation;
+    }
 
-        body::before {
-            content:"";
-            position:fixed;
-            inset:0;
-            background:rgba(0,0,0,0.50);
-            z-index:-2;
-            pointer-events:none;
-        }
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.68);
+      z-index: -2;
+    }
 
-        /* Cursor desktop only */
-        #cursor {
-            width:14px; height:14px; background:var(--text); border-radius:50%;
-            position:fixed; pointer-events:none; z-index:9998;
-            mix-blend-mode:difference; transition:transform 0.12s ease-out;
-        }
+    /* ── Navbar fixe + mini-barre ─────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transform: translateY(-100%);
+      transition: transform 0.7s 0.4s ease;
+    }
 
-        /* Navbar – exactement la même que la page principale */
-        nav {
-            position:fixed; top:0; left:0; right:0; z-index:1000;
-            background:var(--glass); backdrop-filter:blur(20px);
-            border-bottom:1px solid var(--border);
-            padding:1rem 5%;
-            display:flex; justify-content:space-between; align-items:center;
-            transform:translateY(-100%); transition:transform 0.9s 0.6s ease;
-        }
+    nav.visible { transform: translateY(0); }
 
-        .logo { font-size:clamp(1.4rem,6vw,1.8rem); font-weight:900; letter-spacing:-0.5px; }
+    .logo {
+      font-size: clamp(1.35rem, 5.8vw, 1.65rem);
+      font-weight: 900;
+      letter-spacing: -0.3px;
+    }
 
-        .nav-links {
-            display:flex; gap:2.2rem;
-        }
+    .menu-toggle {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 1.95rem;
+      cursor: pointer;
+      padding: 0.4rem;
+      display: block !important; /* Toujours visible */
+    }
 
-        .nav-links a {
-            color:var(--text);
-            text-decoration:none;
-            font-weight:500;
-            font-size:0.95rem;
-            letter-spacing:0.4px;
-            transition:all 0.4s ease;
-            position:relative;
-        }
+    /* Mini-barre Cercle Privé */
+    .announce-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      margin-top: 2.8rem;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.35rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      font-size: 0.86rem;
+      flex-wrap: wrap;
+    }
 
-        .nav-links a:hover {
-            color:var(--accent);
-            text-shadow:var(--neon-glow);
-        }
+    .announce-badge {
+      background: #000;
+      color: #fff;
+      padding: 0.18rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
 
-        .nav-links a::after {
-            content:''; position:absolute; bottom:-5px; left:0; width:0; height:1.5px;
-            background:var(--accent); transition:width 0.4s ease;
-        }
+    .announce-text strong { color: var(--accent); }
 
-        .nav-links a:hover::after { width:100%; }
+    .join-link {
+      background: rgba(10,132,255,0.82);
+      color: white;
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
+    }
 
-        .btn-theme {
-            background:transparent; border:1px solid var(--border);
-            color:var(--text); padding:0.6rem 1.3rem; border-radius:999px;
-            font-size:0.85rem; font-weight:600; transition:all 0.4s ease;
-        }
+    .join-link:active { background: var(--accent); transform: scale(0.97); }
 
-        .btn-theme:hover { background:var(--accent); color:white; border-color:var(--accent); }
+    /* Menu burger plein écran */
+    .nav-menu-mobile {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.96);
+      backdrop-filter: blur(10px);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 2.2rem;
+      transform: translateY(-100%);
+      transition: transform 0.45s ease;
+      z-index: 998;
+    }
 
-        /* Contenu principal */
-        .hero {
-            min-height:50vh; display:flex; flex-direction:column;
-            justify-content:center; align-items:center; text-align:center;
-            padding:8rem 5% 4rem;
-        }
+    .nav-menu-mobile.open { transform: translateY(0); }
 
-        .hero h1 {
-            font-size:clamp(3.5rem,12vw,7rem); font-weight:900; letter-spacing:-0.05em;
-            line-height:0.95; margin-bottom:1rem;
-            background:linear-gradient(90deg,var(--text) 40%,var(--accent) 70%,var(--text) 100%);
-            -webkit-background-clip:text; background-clip:text;
-            -webkit-text-fill-color:transparent;
-        }
+    .nav-menu-mobile a {
+      font-size: 1.35rem;
+      padding: 1rem 2.5rem;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
+    }
 
-        .hero p {
-            font-size:clamp(1.1rem,4vw,1.4rem); color:var(--text-secondary); max-width:700px;
-        }
+    .close-menu {
+      position: absolute;
+      top: 1.2rem; right: 1.2rem;
+      background: none;
+      border: none;
+      color: white;
+      font-size: 2.5rem;
+      cursor: pointer;
+    }
 
-        .annonces-container {
-            max-width:1400px; margin:0 auto; padding:0 5% 6rem;
-        }
+    /* Contenu principal */
+    main {
+      padding: 8.5rem 5% 3rem;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
 
-        .annonce-grid {
-            display:grid; grid-template-columns:1fr; gap:3rem;
-        }
+    .hero {
+      min-height: 50vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 0 5% 4rem;
+    }
 
-        .annonce-card {
-            background:var(--glass); backdrop-filter:blur(16px);
-            border:1px solid var(--border); border-radius:24px;
-            overflow:hidden; box-shadow:var(--shadow);
-            opacity:0; transform:translateY(60px); transition:var(--transition);
-        }
+    .hero h1 {
+      font-size: clamp(3.5rem, 12vw, 7rem);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      line-height: 0.95;
+      margin-bottom: 1rem;
+      background: linear-gradient(90deg, var(--text) 40%, var(--accent) 70%, var(--text) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
 
-        .annonce-card.visible { opacity:1; transform:translateY(0); }
+    .hero p {
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      color: var(--text-secondary);
+      max-width: 700px;
+    }
 
-        .annonce-card:hover { transform:translateY(-8px); box-shadow:0 30px 70px rgba(0,0,0,0.25); }
+    .annonces-container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 5% 6rem;
+    }
 
-        .annonce-img-wrapper {
-            position:relative; height:clamp(300px,60vw,480px); overflow:hidden;
-        }
+    .annonce-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 3rem;
+    }
 
-        .annonce-card img {
-            width:100%; height:100%; object-fit:cover;
-            transition:transform 1.4s ease;
-        }
+    .annonce-card {
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      opacity: 0;
+      transform: translateY(60px);
+      transition: all 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+    }
 
-        .annonce-card:hover img { transform:scale(1.05); }
+    .annonce-card.visible { opacity: 1; transform: translateY(0); }
 
-        .annonce-body {
-            padding:2rem 1.8rem; text-align:center;
-        }
+    .annonce-card:hover { transform: translateY(-8px); box-shadow: 0 30px 70px rgba(0,0,0,0.25); }
 
-        .annonce-date {
-            color:var(--text-secondary); font-size:0.85rem; font-weight:500;
-            text-transform:uppercase; letter-spacing:1px; margin-bottom:1rem;
-        }
+    .annonce-img-wrapper {
+      position: relative;
+      height: clamp(300px, 60vw, 480px);
+      overflow: hidden;
+    }
 
-        .annonce-body h2 {
-            font-size:1.8rem; font-weight:800; margin:0 0 1.2rem;
-            line-height:1.2;
-        }
+    .annonce-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 1.4s ease;
+    }
 
-        .annonce-body p {
-            color:var(--text-secondary); font-size:1.05rem; line-height:1.7;
-        }
+    .annonce-card:hover img { transform: scale(1.05); }
 
-        @media (min-width:768px) {
-            #cursor { display:block; }
-            .annonce-grid { grid-template-columns:repeat(auto-fill,minmax(420px,1fr)); gap:4rem 3rem; }
-            .hero { min-height:60vh; padding-top:12rem; }
-        }
+    .annonce-body {
+      padding: 2rem 1.8rem;
+      text-align: center;
+    }
 
-        @media (min-width:1024px) {
-            .annonces-container { padding:0 6% 8rem; }
-        }
-    </style>
+    .annonce-date {
+      color: var(--text-secondary);
+      font-size: 0.85rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 1rem;
+    }
+
+    .annonce-body h2 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      margin: 0 0 1.2rem;
+      line-height: 1.2;
+    }
+
+    .annonce-body p {
+      color: var(--text-secondary);
+      font-size: 1.05rem;
+      line-height: 1.7;
+    }
+
+    /* Responsive */
+    @media (max-width: 767px) {
+      .announce-bar { margin-top: 2.7rem; padding: 0.32rem 4%; font-size: 0.82rem; gap: 0.7rem; }
+      main { padding: 7.5rem 4% 2.5rem; }
+      .annonce-grid { gap: 2.5rem; }
+    }
+
+    @media (min-width: 768px) {
+      nav { padding: 1rem 7%; }
+      .announce-bar { margin-top: 3.5rem; }
+      main { padding: 9rem 6% 4rem; }
+      .annonce-grid { grid-template-columns: repeat(auto-fill, minmax(420px, 1fr)); gap: 4rem 3rem; }
+    }
+  </style>
 </head>
 <body>
 
-    <div id="cursor"></div>
+  <nav id="navbar">
+    <div class="logo">Gems❄️</div>
+    <button class="menu-toggle" id="menuToggle">☰</button>
+  </nav>
 
-    <nav id="navbar">
-        <div class="logo">Gems❄️</div>
-        <div class="nav-links">
-            <a href="apropos.html">À propos</a>
-            <a href="contact.html">Contact</a>
-            <a href="index.html" class="catalogue-btn">Catalogue</a>
-        </div>
-        <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">DARK</button>
-    </nav>
+  <div class="announce-bar">
+    <span class="announce-badge">PRIVÉ</span>
+    <span class="announce-text"><strong>Le Cercle Privé</strong> – Drops en priorité</span>
+    <a href="https://chat.whatsapp.com/D6BcVIbllGL7Fj6YVqPccP?mode=gi_t" target="_blank" rel="noopener" class="join-link">
+      Rejoindre →
+    </a>
+  </div>
 
+  <div class="nav-menu-mobile" id="mobileMenu">
+    <button class="close-menu" id="closeMenu">✕</button>
+   
+    <a href="index.html">Catalogue</a>
+    <a href="apropos.html">À propos</a>
+    <a href="annonces.html">Annonces</a>
+    <a href="contact.html">Contact</a>
+  </div>
+  </div>
+
+  <main>
     <section class="hero">
-        <h1>Annonces & Actualités</h1>
-        <p>Restez informé des dernières exclusivités et nouveautés Dark pleasure Collection 2026</p>
+      <h1>Annonces & Actualités</h1>
+      <p>Restez informé des dernières exclusivités et nouveautés Dark pleasure Collection 2026</p>
     </section>
 
     <div class="annonces-container">
-        <div class="annonce-grid" id="annonces-list"></div>
+      <div class="annonce-grid" id="annonces-list">
+        <div class="empty-state" style="grid-column:1/-1;text-align:center;color:var(--text-secondary);padding:6rem 2rem;">
+          Chargement des annonces...
+        </div>
+      </div>
     </div>
+  </main>
 
-    <script>
-         const SB_URL = "https://antifrphxjyaylklsijh.supabase.co";
-        const SB_KEY = "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl";
-        const nexa = supabase.createClient(SB_URL, SB_KEY);
+  <script>
+    const nexa = supabase.createClient("https://antifrphxjyaylklsijh.supabase.co", "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl");
 
-        // Loader
-        window.addEventListener('load', () => {
-            document.body.style.overflow = 'auto';
-            document.getElementById('navbar').style.transform = 'translateY(0)';
-        });
+    // Apparition navbar
+    window.addEventListener('load', () => {
+      document.getElementById('navbar').style.transform = 'translateY(0)';
+    });
 
-        // Cursor desktop only
-        if (window.innerWidth > 767) {
-            const cursor = document.getElementById('cursor');
-            document.addEventListener('mousemove', e => {
-                cursor.style.left = e.clientX - 7 + 'px';
-                cursor.style.top  = e.clientY - 7 + 'px';
-            });
+    // Menu burger (toujours visible)
+    const toggle = document.getElementById('menuToggle');
+    const menu = document.getElementById('mobileMenu');
+    const closeBtn = document.getElementById('closeMenu');
+
+    toggle?.addEventListener('click', () => menu.classList.add('open'));
+    closeBtn?.addEventListener('click', () => menu.classList.remove('open'));
+    menu?.addEventListener('click', e => { if (e.target === menu) menu.classList.remove('open'); });
+
+    async function chargerAnnonces() {
+      const container = document.getElementById('annonces-list');
+
+      try {
+        const { data, error } = await nexa
+          .from('produits')
+          .select('*')
+          .eq('type', 'annonce')
+          .order('created_at', { ascending: false });
+
+        if (error) throw error;
+
+        if (!data || data.length === 0) {
+          container.innerHTML = '<div class="empty-state">Aucune annonce pour le moment.</div>';
+          return;
         }
 
-        // Theme toggle
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            document.getElementById('themeBtn').textContent = 
-                document.body.classList.contains('dark-mode') ? 'LIGHT' : 'DARK';
-        }
+        container.innerHTML = data.map(item => {
+          const dateStr = new Date(item.created_at).toLocaleDateString('fr-FR', {
+            day: 'numeric', month: 'long', year: 'numeric'
+          });
 
-        // Charger uniquement les annonces
-        async function chargerAnnonces() {
-            const { data, error } = await nexa
-                .from('produits')
-                .select('*')
-                .eq('type', 'annonce')
-                .order('created_at', { ascending: false });
+          return `
+            <div class="annonce-card">
+              ${item.image_url ? `
+                <div class="annonce-img-wrapper">
+                  <img src="${item.image_url}" alt="${item.titre || 'Annonce'}" loading="lazy">
+                </div>
+              ` : ''}
+              <div class="annonce-body">
+                <div class="annonce-date">${dateStr}</div>
+                <h2>${item.titre || 'Annonce sans titre'}</h2>
+                <p>${item.description || item.prix || 'Aucune description disponible.'}</p>
+              </div>
+            </div>
+          `;
+        }).join('');
 
-            const container = document.getElementById('annonces-list');
-            container.innerHTML = '';
+        // Apparition progressive
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+          });
+        }, { threshold: 0.1 });
 
-            if (error) {
-                container.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">Erreur lors du chargement.</p>';
-                return;
-            }
+        document.querySelectorAll('.annonce-card').forEach(card => observer.observe(card));
 
-            if (!data || data.length === 0) {
-                container.innerHTML = '<p style="text-align:center; color:var(--text-secondary);">Aucune annonce pour le moment.</p>';
-                return;
-            }
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = '<div class="empty-state" style="color:#ff4d4d">Erreur lors du chargement.</div>';
+      }
+    }
 
-            data.forEach(item => {
-                const dateStr = new Date(item.created_at).toLocaleDateString('fr-FR', {
-                    day: 'numeric', month: 'long', year: 'numeric'
-                });
-
-                container.innerHTML += `
-                    <div class="annonce-card">
-                        ${item.image_url ? `
-                            <div class="annonce-img-wrapper">
-                                <img src="${item.image_url}" alt="${item.titre || 'Annonce'}" loading="lazy">
-                            </div>
-                        ` : ''}
-                        <div class="annonce-body">
-                            <div class="annonce-date">${dateStr}</div>
-                            <h2>${item.titre || 'Annonce sans titre'}</h2>
-                            <p>${item.description || item.prix || 'Aucune description disponible.'}</p>
-                        </div>
-                    </div>
-                `;
-            });
-
-            // Observer pour apparition progressive
-            const observer = new IntersectionObserver(entries => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) entry.target.classList.add('visible');
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.annonce-card').forEach(card => observer.observe(card));
-        }
-
-        chargerAnnonces();
-    </script>
+    chargerAnnonces();
+  </script>
 </body>
 </html>

@@ -6,19 +6,18 @@
   <title>Gems❄️ | Inventaire Global</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
     :root {
-      --bg: #0a0a0a;
+      --bg: #000000;
       --text: #f5f5f7;
-      --text-secondary: #a1a1a6;
+      --text-secondary: #a0a0a5;
       --accent: #0a84ff;
-      --glass: rgba(40, 40, 45, 0.88);
-      --border: rgba(255, 255, 255, 0.14);
-      --shadow: 0 10px 30px rgba(0,0,0,0.6);
-      --transition: all 0.4s ease;
-      --neon-glow: 0 0 16px rgba(10, 132, 255, 0.6);
+      --glass: rgba(30, 30, 32, 0.88);
+      --border: rgba(255, 255, 255, 0.12);
+      --shadow: 0 10px 30px rgba(0,0,0,0.5);
+      --danger: #ff453a;
     }
 
     * { margin:0; padding:0; box-sizing:border-box; }
@@ -28,6 +27,7 @@
       color: var(--text);
       font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh;
+      overflow-x: hidden;
       background-image: url('m7.jpg');
       background-size: cover;
       background-position: center;
@@ -39,115 +39,117 @@
       content: "";
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.75);
+      background: rgba(0,0,0,0.68);
       z-index: -2;
     }
 
-    /* Curseur desktop only */
-    #cursor {
-      width: 14px; height: 14px; background: var(--text); border-radius: 50%;
-      position: fixed; pointer-events: none; z-index: 9998;
-      mix-blend-mode: difference; transition: transform 0.12s ease-out;
-      display: none;
+    /* ── Navbar fixe + mini-barre Cercle Privé ─────────────────────────────── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.85rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transform: translateY(-100%);
+      transition: transform 0.7s 0.4s ease;
     }
 
-    /* Navbar – burger only sur mobile */
-    nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: var(--glass); backdrop-filter: blur(20px);
-      border-bottom: 1px solid var(--border);
-      padding: 0.9rem 5%;
-      display: flex; justify-content: space-between; align-items: center;
-      transform: translateY(-100%); transition: transform 0.7s 0.4s ease;
+    nav.visible {
+      transform: translateY(0);
     }
 
     .logo {
-      font-size: clamp(1.5rem, 6.5vw, 2rem);
+      font-size: clamp(1.35rem, 5.8vw, 1.65rem);
       font-weight: 900;
-      letter-spacing: -0.8px;
-      background: linear-gradient(90deg, var(--text) 40%, var(--accent) 70%, var(--text) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
+      letter-spacing: -0.3px;
     }
 
     .menu-toggle {
       background: none;
       border: none;
       color: var(--text);
-      font-size: 2rem;
+      font-size: 1.95rem;
       cursor: pointer;
-      padding: 0.6rem;
-      border-radius: 12px;
-      transition: var(--transition);
+      padding: 0.4rem;
+      display: block !important; /* toujours visible, comme demandé */
     }
 
-    .menu-toggle:active {
-      background: rgba(255,255,255,0.1);
+    /* Mini-barre Cercle Privé */
+    .announce-bar {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 999;
+      margin-top: 2.8rem;
+      background: var(--glass);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+      padding: 0.35rem 5%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.9rem;
+      font-size: 0.86rem;
+      flex-wrap: wrap;
     }
 
-    /* Liens desktop cachés sur mobile */
-    .nav-links-desktop {
-      display: none;
-      gap: 1rem;
-    }
-
-    .nav-link {
-      padding: 0.7rem 1.2rem;
+    .announce-badge {
+      background: #000;
+      color: #fff;
+      padding: 0.18rem 0.6rem;
       border-radius: 999px;
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-weight: 500;
-      font-size: clamp(0.9rem, 3.8vw, 1rem);
-      transition: var(--transition);
-      white-space: nowrap;
+      font-size: 0.65rem;
+      font-weight: 700;
+      text-transform: uppercase;
     }
 
-    .nav-link:hover, .nav-link.active {
-      background: var(--accent);
+    .announce-text strong { color: var(--accent); }
+
+    .join-link {
+      background: rgba(10,132,255,0.82);
       color: white;
-      box-shadow: 0 0 18px rgba(10,132,255,0.4);
+      padding: 0.3rem 1rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-decoration: none;
     }
 
-    /* Menu burger mobile plein écran */
+    .join-link:active { background: var(--accent); transform: scale(0.97); }
+
+    /* Menu burger mobile (plein écran) */
     .nav-menu-mobile {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.94);
-      backdrop-filter: blur(12px);
+      inset: 0;
+      background: rgba(0,0,0,0.96);
+      backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       gap: 2.2rem;
       transform: translateY(-100%);
-      transition: transform 0.5s ease;
-      z-index: 999;
+      transition: transform 0.45s ease;
+      z-index: 998;
     }
 
-    .nav-menu-mobile.open {
-      transform: translateY(0);
-    }
+    .nav-menu-mobile.open { transform: translateY(0); }
 
-    .nav-menu-mobile .nav-link,
-    .nav-menu-mobile .logout-btn,
-    .nav-menu-mobile .btn-theme {
-      font-size: 1.4rem;
-      padding: 1.2rem 3rem;
-      min-width: 260px;
-      text-align: center;
+    .nav-menu-mobile a {
+      font-size: 1.35rem;
+      padding: 1rem 2.5rem;
+      color: var(--text);
+      text-decoration: none;
+      font-weight: 500;
     }
 
     .close-menu {
       position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
+      top: 1.2rem; right: 1.2rem;
       background: none;
       border: none;
       color: white;
@@ -155,47 +157,11 @@
       cursor: pointer;
     }
 
-    .logout-btn {
-      background: #ff4d4d;
-      color: white;
-      border: none;
-      padding: 1rem 2rem;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 1.3rem;
-      cursor: pointer;
-      min-width: 220px;
-    }
-
-    .logout-btn:active {
-      background: #ff3333;
-      transform: scale(0.97);
-    }
-
-    .btn-theme {
-      background: transparent;
-      border: 1px solid var(--border);
-      color: var(--text);
-      padding: 1rem 2rem;
-      border-radius: 999px;
-      font-weight: 600;
-      font-size: 1.3rem;
-      min-width: 220px;
-    }
-
-    .btn-theme:active {
-      background: var(--accent);
-      color: white;
-      border-color: var(--accent);
-    }
-
-    /* Main content */
+    /* Contenu principal */
     main {
-      margin-top: 80px;
-      padding: 2rem 5% 4rem;
+      padding: 8.5rem 5% 3rem;
       max-width: 1400px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: 0 auto;
     }
 
     h1 {
@@ -217,17 +183,27 @@
 
     .card {
       background: var(--glass);
-      backdrop-filter: blur(20px);
+      backdrop-filter: blur(14px);
       border: 1px solid var(--border);
-      border-radius: 24px;
+      border-radius: 20px;
       overflow: hidden;
       box-shadow: var(--shadow);
-      transition: var(--transition);
+      transition: all 0.5s ease;
+      opacity: 0;
+      transform: translateY(40px) scale(0.97);
     }
 
-    .card:active {
-      transform: translateY(-4px);
-      box-shadow: 0 15px 40px rgba(0,0,0,0.5);
+    .card.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    .card:nth-child(odd)  { transition-delay: 0.1s; }
+    .card:nth-child(even) { transition-delay: 0.18s; }
+
+    .card:hover, .card:active {
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
     }
 
     .card-img {
@@ -292,7 +268,7 @@
       border-radius: 999px;
       font-weight: 700;
       cursor: pointer;
-      transition: var(--transition);
+      transition: all 0.3s;
       min-height: 52px;
     }
 
@@ -312,53 +288,48 @@
     }
 
     /* Responsive */
-    @media (min-width: 769px) {
-      #cursor { display: block; }
-      nav { flex-direction: row; justify-content: space-between; }
-      .nav-links-desktop { display: flex; }
-      .menu-toggle { display: none; }
-      .nav-menu-mobile { display: none; }
-      main { margin-top: 100px; padding: 3rem 5%; }
+    @media (max-width: 767px) {
+      .announce-bar { margin-top: 2.7rem; padding: 0.32rem 4%; font-size: 0.82rem; gap: 0.7rem; }
+      main { padding: 7.5rem 4% 2.5rem; }
+      .grid { grid-template-columns: 1fr; }
     }
 
-    @media (max-width: 768px) {
-      .nav-links-desktop { display: none; }
-      .menu-toggle { display: block; }
-      main { margin-top: 80px; padding: 2rem 6% 4rem; }
-      .grid { grid-template-columns: 1fr; }
+    @media (min-width: 768px) {
+      nav { padding: 1rem 7%; }
+      .announce-bar { margin-top: 3.5rem; }
+      main { padding: 9rem 6% 4rem; }
     }
   </style>
 </head>
 <body>
 
-  <div id="cursor"></div>
-
   <nav id="navbar">
     <div class="logo">Gems❄️</div>
-
-    <div class="nav-right">
-      <button class="menu-toggle" id="menuToggle">☰</button>
-    </div>
+    <button class="menu-toggle" id="menuToggle">☰</button>
   </nav>
 
-  <!-- Menu burger mobile (tout y est) -->
+  <div class="announce-bar">
+    <span class="announce-badge">PRIVÉ</span>
+    <span class="announce-text"><strong>Le Cercle Privé</strong> – Drops en priorité</span>
+    <a href="https://chat.whatsapp.com/D6BcVIbllGL7Fj6YVqPccP?mode=gi_t" target="_blank" rel="noopener" class="join-link">
+      Rejoindre →
+    </a>
+  </div>
+
   <div class="nav-menu-mobile" id="mobileMenu">
     <button class="close-menu" id="closeMenu">✕</button>
-
-    <a href="dashboard.html" class="nav-link">Nouveau Produit</a>
-    <a href="admin-annonces.html" class="nav-link">Nouvelle Annonce</a>
-    <a href="admin-inventaire.html" class="nav-link active">Mes Publications</a>
-    <a href="admin-historique.html" class="nav-link">Historique</a>
-
-    <button class="btn-theme" onclick="toggleTheme()" id="themeBtn">DARK</button>
-    <button class="logout-btn" onclick="logout()">Déconnexion</button>
+    <a href="dashboard.html">📦 Nouveau Produit</a>
+    <a href="admin-annonces.html">Nouvelle Annonce</a>
+    <a href="admin-inventaire.html" class="active">Mes Publications</a>
+    <a href="admin-historique.html">Historique</a>
+    <a href="admin-details-manager.html">Éditeur Détails</a>
   </div>
 
   <main>
     <h1>Gestion de l'Inventaire</h1>
 
     <div style="text-align:right; margin-bottom:1.5rem;">
-      <button onclick="chargerInventaire()" class="btn-theme" style="padding:0.8rem 1.6rem;">
+      <button onclick="chargerInventaire()" style="background:rgba(10,132,255,0.2); color:var(--accent); border:1px solid var(--accent); padding:0.8rem 1.6rem; border-radius:999px; cursor:pointer; font-weight:600;">
         🔄 Actualiser
       </button>
     </div>
@@ -369,119 +340,97 @@
   </main>
 
   <script>
-    // Loader + navbar apparition
+    const nexa = supabase.createClient("https://antifrphxjyaylklsijh.supabase.co", "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl");
+
+    // Apparition navbar au chargement
     window.addEventListener('load', () => {
       document.getElementById('navbar').style.transform = 'translateY(0)';
     });
 
-    // Curseur desktop only
-    if (window.innerWidth > 767) {
-      const cursor = document.getElementById('cursor');
-      document.addEventListener('mousemove', e => {
-        cursor.style.left = (e.clientX - 8) + 'px';
-        cursor.style.top  = (e.clientY - 8) + 'px';
-      });
-    }
+    // Menu burger (toujours visible)
+    const toggle = document.getElementById('menuToggle');
+    const menu = document.getElementById('mobileMenu');
+    const closeBtn = document.getElementById('closeMenu');
 
-    // Burger menu toggle
-    const menuToggle = document.getElementById('menuToggle');
-    const closeMenu = document.getElementById('closeMenu');
-    const mobileMenu = document.getElementById('mobileMenu');
+    toggle?.addEventListener('click', () => menu.classList.add('open'));
+    closeBtn?.addEventListener('click', () => menu.classList.remove('open'));
+    menu?.addEventListener('click', e => { if (e.target === menu) menu.classList.remove('open'); });
 
-    menuToggle.addEventListener('click', () => {
-      mobileMenu.classList.add('open');
-    });
-
-    closeMenu.addEventListener('click', () => {
-      mobileMenu.classList.remove('open');
-    });
-
-    mobileMenu.addEventListener('click', (e) => {
-      if (e.target === mobileMenu) mobileMenu.classList.remove('open');
-    });
-
-    // Dark / Light mode
-    function toggleTheme() {
-      document.body.classList.toggle('dark-mode');
-      document.getElementById('themeBtn').textContent = 
-        document.body.classList.contains('dark-mode') ? 'LIGHT' : 'DARK';
-    }
-
-    // Déconnexion
-    function logout() {
-      nexa.auth.signOut().then(() => {
-        window.location.href = "login.html";
-      });
-    }
-
-    // ────────────────────────────────────────────────
-    // TON CODE INVENTAIRE – INCHANGÉ
-    // ────────────────────────────────────────────────
-    const SB_URL = "https://antifrphxjyaylklsijh.supabase.co";
-    const SB_KEY = "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl";
-    const nexa = supabase.createClient(SB_URL, SB_KEY);
-
+    // Chargement inventaire
     async function chargerInventaire() {
       const container = document.getElementById('grid-container');
       container.innerHTML = '<div class="empty-state">Chargement des publications...</div>';
 
-      const { data, error } = await nexa
-        .from('produits')
-        .select('*')
-        .order('created_at', { ascending: false });
+      try {
+        const { data, error } = await nexa
+          .from('produits')
+          .select('*')
+          .order('created_at', { ascending: false });
 
-      if (error) {
-        container.innerHTML = `<div class="empty-state" style="color:#ff4d4d">Erreur : ${error.message}</div>`;
-        return;
-      }
+        if (error) throw error;
 
-      if (!data || data.length === 0) {
-        container.innerHTML = `<div class="empty-state">Aucune publication trouvée.<br>Ajoutez un produit ou une annonce pour commencer.</div>`;
-        return;
-      }
+        if (!data || data.length === 0) {
+          container.innerHTML = `<div class="empty-state">Aucune publication trouvée.<br>Ajoutez un produit ou une annonce.</div>`;
+          return;
+        }
 
-      container.innerHTML = '';
+        container.innerHTML = '';
 
-      data.forEach(item => {
-        const type = item.type || 'produit';
-        const isAnnonce = type === 'annonce';
+        data.forEach(item => {
+          const type = item.type || 'produit';
+          const isAnnonce = type === 'annonce';
 
-        const badgeClass = isAnnonce ? 'badge-ann' : 'badge-prod';
-        const badgeText = isAnnonce ? 'PUBLICITÉ' : 'PRODUIT';
+          const badgeClass = isAnnonce ? 'badge-ann' : 'badge-prod';
+          const badgeText = isAnnonce ? 'PUBLICITÉ' : 'PRODUIT';
 
-        const priceHtml = isAnnonce 
-          ? '<span style="font-size:0.9rem; color:var(--text-secondary);">Diffusion active</span>' 
-          : `<span class="card-price">${item.prix || 'Prix sur demande'}</span>`;
+          const priceHtml = isAnnonce 
+            ? '<span style="font-size:0.9rem; color:var(--text-secondary);">Diffusion active</span>' 
+            : `<span class="card-price">${item.prix || 'Prix sur demande'}</span>`;
 
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-          <img src="${item.image_url}" class="card-img" onerror="this.src='https://via.placeholder.com/400x220?text=Image+Introuvable'">
-          <div class="card-body">
-            <div class="card-header">
-              <span class="badge ${badgeClass}">${badgeText}</span>
-              <span style="font-size:0.85rem; color:var(--text-secondary);">
-                ${new Date(item.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
-              </span>
+          const card = document.createElement('div');
+          card.className = 'card';
+          card.innerHTML = `
+            <img src="${item.image_url || 'https://via.placeholder.com/400x220?text=Pas+d\'image'}" class="card-img" loading="lazy">
+            <div class="card-body">
+              <div class="card-header">
+                <span class="badge ${badgeClass}">${badgeText}</span>
+                <span style="font-size:0.85rem; color:var(--text-secondary);">
+                  ${new Date(item.created_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}
+                </span>
+              </div>
+              <h3 class="card-title">${item.titre || 'Sans titre'}</h3>
+              ${priceHtml}
+              <p class="card-desc">${item.description || 'Aucune description'}</p>
+              <button class="btn-delete" onclick="supprimer('${item.id}')">Supprimer</button>
             </div>
-            <h3 class="card-title">${item.titre}</h3>
-            ${priceHtml}
-            <p class="card-desc">${item.description || 'Aucune description disponible'}</p>
-            <button class="btn-delete" onclick="supprimer('${item.id}')">Supprimer</button>
-          </div>
-        `;
-        container.appendChild(card);
-      });
+          `;
+          container.appendChild(card);
+        });
+
+        // Apparition progressive des cartes
+        const observer = new IntersectionObserver(entries => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) entry.target.classList.add('visible');
+          });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.card').forEach(card => observer.observe(card));
+
+      } catch (err) {
+        console.error(err);
+        container.innerHTML = `<div class="empty-state" style="color:#ff4d4d">Erreur : ${err.message}</div>`;
+      }
     }
 
     async function supprimer(id) {
-      if (confirm("⚠️ Cette action est irréversible.\nConfirmer la suppression ?")) {
+      if (!confirm("⚠️ Cette action est irréversible.\nConfirmer la suppression ?")) return;
+
+      try {
         const { error } = await nexa.from('produits').delete().eq('id', id);
-        if (error) {
-          alert("Erreur : " + error.message);
-        } else {
-          chargerInventaire();
-        }
+        if (error) throw error;
+        chargerInventaire();
+      } catch (err) {
+        alert("Erreur suppression : " + err.message);
       }
     }
 

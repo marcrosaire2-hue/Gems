@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Gems❄️ | Catalogue Officiel</title>
+  <title>Gems❄️ | Détails Produit</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -27,7 +27,7 @@
       font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
-      background-image: url('m1.jpg'); /* même fond que les autres pages */
+      background-image: url('m1.jpg');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
@@ -73,7 +73,7 @@
       font-size: 1.95rem;
       cursor: pointer;
       padding: 0.4rem;
-      display: block !important; /* toujours visible */
+      display: block !important; /* Toujours visible */
     }
 
     /* Mini-barre Cercle Privé */
@@ -157,110 +157,129 @@
     /* Contenu principal */
     main {
       padding: 8.5rem 5% 3rem;
-      max-width: 1400px;
+      max-width: 1200px;
       margin: 0 auto;
     }
 
-    .categories {
-      display: flex;
-      justify-content: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      padding: 1.5rem 5% 0;
-    }
-
-    .cat-btn {
-      padding: 0.8rem 1.6rem;
-      border-radius: 999px;
-      background: rgba(255,255,255,0.04);
-      border: 1px solid var(--border);
-      color: var(--text);
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s;
-    }
-
-    .cat-btn.active, .cat-btn:hover {
-      background: var(--accent);
-      border-color: var(--accent);
-      color: white;
-    }
-
-    .grid {
+    .container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-      gap: 1rem 0.9rem;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
     }
 
-    .card {
-      background: var(--glass);
-      backdrop-filter: blur(14px);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.5s ease;
-      opacity: 0;
-      transform: translateY(40px) scale(0.97);
-      box-shadow: var(--shadow);
-      text-decoration: none;
-      color: inherit;
+    .viewer-container {
+      position: sticky;
+      top: 8rem;
+      align-self: start;
     }
 
-    .card.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    .card:nth-child(odd)  { transition-delay: 0.1s; }
-    .card:nth-child(even) { transition-delay: 0.18s; }
-
-    .card:hover {
-      border-color: var(--accent);
-      transform: translateY(-6px) scale(1.02);
-    }
-
-    .card img {
+    .main-img {
       width: 100%;
-      height: clamp(110px, 35vw, 150px);
+      aspect-ratio: 1;
       object-fit: cover;
+      border-radius: 20px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.02);
+      box-shadow: var(--shadow);
+      transition: all 0.4s ease;
     }
 
-    .card h3 {
-      font-size: 0.96rem;
-      font-weight: 700;
-      padding: 0.8rem 0.9rem 0.3rem;
-      margin: 0;
+    .thumbs {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      overflow-x: auto;
+      padding-bottom: 0.5rem;
     }
 
-    .card .price {
-      font-size: 0.9rem;
-      color: var(--accent);
+    .thumb-img {
+      width: 80px;
+      height: 80px;
+      object-fit: cover;
+      border-radius: 12px;
+      cursor: pointer;
+      border: 2px solid transparent;
+      opacity: 0.7;
+      transition: all 0.3s ease;
+    }
+
+    .thumb-img:hover, .thumb-img.active {
+      opacity: 1;
+      border-color: var(--accent);
+      transform: scale(1.05);
+    }
+
+    .info-container h1 {
+      font-size: clamp(2rem, 6vw, 3rem);
+      font-weight: 900;
+      margin-bottom: 0.8rem;
+      line-height: 1.1;
+    }
+
+    .price {
+      font-size: clamp(1.8rem, 5vw, 2.8rem);
       font-weight: 800;
-      padding: 0 0.9rem 1rem;
-      margin: 0;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+
+    .desc-title {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.8rem;
+    }
+
+    .description {
+      line-height: 1.7;
+      color: var(--text-secondary);
+      margin-bottom: 3rem;
+      white-space: pre-wrap;
+    }
+
+    .btn-wa {
+      display: block;
+      text-align: center;
+      background: var(--accent);
+      color: white;
+      text-decoration: none;
+      padding: 1.2rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      transition: all 0.3s;
+      box-shadow: 0 8px 25px rgba(10,132,255,0.3);
+    }
+
+    .btn-wa:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 15px 40px rgba(10,132,255,0.4);
+    }
+
+    .btn-wa:active {
+      transform: scale(0.97);
     }
 
     .loader {
-      grid-column: 1 / -1;
       text-align: center;
-      padding: 6rem 2rem;
+      padding: 8rem 2rem;
       color: var(--text-secondary);
-      font-size: 1.2rem;
+      font-size: 1.4rem;
     }
 
     /* Responsive */
     @media (max-width: 767px) {
+      .container { grid-template-columns: 1fr; gap: 2rem; }
+      .viewer-container { position: relative; top: 0; }
       .announce-bar { margin-top: 2.7rem; padding: 0.32rem 4%; font-size: 0.82rem; gap: 0.7rem; }
       main { padding: 7.5rem 4% 2.5rem; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 0.9rem 0.8rem; }
     }
 
     @media (min-width: 768px) {
       nav { padding: 1rem 7%; }
       .announce-bar { margin-top: 3.5rem; }
       main { padding: 9rem 6% 4rem; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
     }
   </style>
 </head>
@@ -288,15 +307,24 @@
   </div>
 
   <main>
-    <div class="categories">
-      <button class="cat-btn active">Tous</button>
-      <button class="cat-btn">Smartphones</button>
-      <button class="cat-btn">Accessoires</button>
-    </div>
+    <div id="loading" class="loader">Chargement du produit...</div>
 
-    <div class="container">
-      <div id="loader" class="loader">Chargement des produits...</div>
-      <div class="grid" id="grid"></div>
+    <div class="container" id="product-page" style="display:none;">
+      <div class="viewer-container">
+        <img id="main-viewer" src="" class="main-img" alt="Produit">
+        <div class="thumbs" id="thumb-container"></div>
+      </div>
+
+      <div class="info-container">
+        <a href="index.html" style="color:var(--accent); text-decoration:none; font-weight:600; display:inline-block; margin-bottom:1.5rem;">← Retour au catalogue</a>
+        <h1 id="p-title">Nom du produit</h1>
+        <div class="price" id="p-price">0 FCFA</div>
+
+        <div class="desc-title">Détails du produit</div>
+        <div class="description" id="p-desc">Description ici...</div>
+
+        <a href="#" id="wa-link" class="btn-wa">Commander sur WhatsApp</a>
+      </div>
     </div>
   </main>
 
@@ -317,50 +345,62 @@
     closeBtn?.addEventListener('click', () => menu.classList.remove('open'));
     menu?.addEventListener('click', e => { if (e.target === menu) menu.classList.remove('open'); });
 
-    async function chargerCatalogue() {
-      const grid = document.getElementById('grid');
-      const loader = document.getElementById('loader');
+    async function chargerDetails() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+
+      if (!id) {
+        document.getElementById('loading').innerText = "Erreur : Aucun produit sélectionné.";
+        return;
+      }
 
       try {
-        const { data, error } = await nexa
+        const { data: p, error } = await nexa
           .from('produits')
           .select('*')
-          .order('created_at', { ascending: false });
+          .eq('id', id)
+          .single();
 
-        if (error) throw error;
+        if (error || !p) throw new Error("Produit introuvable.");
 
-        if (!data || data.length === 0) {
-          loader.innerText = "Aucun article en stock pour le moment.";
-          return;
+        document.getElementById('p-title').textContent = p.titre || 'Produit sans nom';
+        document.getElementById('p-price').textContent = p.prix ? p.prix + ' FCFA' : 'Sur demande';
+        document.getElementById('p-desc').textContent = p.description_longue || p.description || 'Aucune description disponible.';
+
+        const mainImg = document.getElementById('main-viewer');
+        mainImg.src = p.image_url || 'https://via.placeholder.com/600?text=Image+Introuvable';
+
+        // Galerie (image principale + galerie)
+        const thumbs = document.getElementById('thumb-container');
+        const allImages = [p.image_url, ...(p.galerie || [])].filter(Boolean);
+        
+        if (allImages.length > 1) {
+          thumbs.innerHTML = allImages.map((url, i) => `
+            <img src="${url}" class="thumb-img ${i === 0 ? 'active' : ''}" 
+                 onclick="changeMainImage('${url}', this)" alt="Miniature ${i+1}">
+          `).join('');
         }
 
-        loader.style.display = 'none';
+        // Lien WhatsApp
+        const message = encodeURIComponent(`Bonjour, je suis intéressé par : ${p.titre} (${p.prix || 'prix sur demande'} FCFA).`);
+        document.getElementById('wa-link').href = `https://wa.me/2290192878702?text=${message}`;
 
-        grid.innerHTML = data.map(p => `
-          <a href="details.html?id=${p.id}" class="card">
-            <img src="${p.image_url || ''}" alt="${p.titre || 'Produit'}" loading="lazy">
-            <h3>${p.titre || 'Sans titre'}</h3>
-            <div class="price">${p.prix ? p.prix + ' FCFA' : 'Sur demande'}</div>
-            <button class="btn-more">Voir plus</button>
-          </a>
-        `).join('');
-
-        // Apparition progressive
-        const observer = new IntersectionObserver(entries => {
-          entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
-          });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.card').forEach(card => observer.observe(card));
+        document.getElementById('loading').style.display = 'none';
+        document.getElementById('product-page').style.display = 'grid';
 
       } catch (err) {
         console.error(err);
-        loader.innerText = "Erreur de chargement du catalogue.";
+        document.getElementById('loading').innerText = "❌ " + (err.message || "Erreur inconnue");
       }
     }
 
-    chargerCatalogue();
+    function changeMainImage(url, el) {
+      document.getElementById('main-viewer').src = url;
+      document.querySelectorAll('.thumb-img').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+    }
+
+    chargerDetails();
   </script>
 </body>
 </html>
