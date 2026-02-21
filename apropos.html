@@ -12,14 +12,17 @@
   <style>
     :root {
       --bg: #000000;
-      --text: #f5f5f7;
-      --text-secondary: #8e8e93;
-      --accent: #0a84ff;
-      --glass: rgba(30, 30, 32, 0.88);
-      --border: rgba(255, 255, 255, 0.14);
-      --shadow: 0 10px 30px rgba(0,0,0,0.5);
-      --transition: all 0.4s ease;
-      --neon-glow: 0 0 16px rgba(10, 132, 255, 0.6);
+      --text: #f8f9fc;
+      --text-sec: #a0a0aa;
+      --accent: #3b82f6;          /* bleu plus 2026 */
+      --accent-glow: #60a5fa;
+      --glass: rgba(28, 28, 35, 0.68);
+      --glass-strong: rgba(35, 35, 42, 0.88);
+      --border: rgba(255,255,255,0.08);
+      --shadow: 0 16px 48px rgba(0,0,0,0.55);
+      --glow: 0 0 20px rgba(59,130,246,0.35);
+      --transition: all 0.42s cubic-bezier(0.16,1,0.3,1);
+      --radius: 20px;
     }
 
     * {
@@ -33,213 +36,245 @@
       color: var(--text);
       font-family: 'Inter', system-ui, sans-serif;
       min-height: 100vh;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
       overflow-x: hidden;
       background-image: url('m3.jpg');
       background-size: cover;
-      background-position: center;
+      background-position: center 30%;
       background-attachment: fixed;
-      touch-action: manipulation;
+      -webkit-font-smoothing: antialiased;
     }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.68);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.75), rgba(0,0,0,0.55));
       z-index: -2;
-      pointer-events: none;
     }
 
-    /* Curseur desktop only */
+    /* Curseur custom – plus subtil & fluide */
     #cursor {
-      width: 14px; height: 14px; background: var(--text); border-radius: 50%;
-      position: fixed; pointer-events: none; z-index: 9998;
-      mix-blend-mode: difference; transition: transform 0.12s ease-out;
+      width: 20px; height: 20px;
+      border: 1px solid var(--accent-glow);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      mix-blend-mode: difference;
+      transform: translate(-50%, -50%);
+      transition: transform 0.18s ease-out, opacity 0.3s;
+      opacity: 0.7;
       display: none;
     }
 
-    /* Navbar – burger only sur mobile, liens normaux sur PC */
+    #cursor.visible { opacity: 1; }
+
+    /* Navbar */
     nav {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 1000;
-      background: var(--glass); backdrop-filter: blur(16px);
+      position: fixed;
+      inset: 0 0 auto 0;
+      z-index: 1000;
+      background: var(--glass-strong);
+      backdrop-filter: blur(24px) saturate(160%);
+      -webkit-backdrop-filter: blur(24px) saturate(160%);
       border-bottom: 1px solid var(--border);
-      padding: 0.9rem 5%;
-      display: flex; justify-content: space-between; align-items: center;
-      transform: translateY(-100%); transition: transform 0.7s 0.4s ease;
+      padding: 1rem 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transform: translateY(-120%);
+      transition: transform 0.9s cubic-bezier(0.23,1,0.32,1);
     }
+
+    nav.visible { transform: translateY(0); }
 
     .logo {
-      font-size: clamp(1.4rem, 6vw, 1.7rem);
+      font-size: clamp(1.5rem, 6.5vw, 2rem);
       font-weight: 900;
-      letter-spacing: -0.4px;
+      letter-spacing: -1px;
+      background: linear-gradient(90deg, #fff, var(--accent-glow), #fff);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
-    .nav-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
+    .nav-right { display: flex; align-items: center; gap: 1.4rem; }
 
-    /* Liens visibles uniquement sur desktop */
     .nav-links-desktop {
       display: flex;
-      gap: 1.6rem;
+      gap: 2rem;
     }
 
     .nav-links-desktop a {
       color: var(--text);
       text-decoration: none;
       font-weight: 500;
-      font-size: clamp(0.95rem, 1.8vw, 1.05rem);
-      padding: 0.6rem 0.4rem;
-      transition: all 0.4s ease;
+      font-size: clamp(1rem, 1.9vw, 1.1rem);
+      transition: var(--transition);
+      position: relative;
     }
 
-    .nav-links-desktop a:hover,
-    .nav-links-desktop a:active {
-      color: var(--accent);
-      text-shadow: var(--neon-glow);
+    .nav-links-desktop a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 50%; width: 0;
+      height: 2px;
+      background: var(--accent);
+      transition: var(--transition);
+      transform: translateX(-50%);
     }
 
-    /* Burger visible uniquement sur mobile */
+    .nav-links-desktop a:hover::after { width: 80%; }
+
+    .nav-links-desktop a:hover { color: var(--accent-glow); }
+
     .menu-toggle {
       background: none;
       border: none;
-      color: var(--text);
-      font-size: 2rem;
+      color: white;
+      font-size: 2.2rem;
       cursor: pointer;
-      padding: 0.6rem;
-      border-radius: 12px;
-      transition: var(--transition);
+      padding: 0.5rem;
       display: none;
     }
 
-    .menu-toggle:active {
-      background: rgba(255,255,255,0.1);
-    }
-
-    /* Menu burger mobile plein écran */
+    /* Menu mobile */
     .nav-menu-mobile {
       position: fixed;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: rgba(0,0,0,0.94);
-      backdrop-filter: blur(12px);
+      inset: 0;
+      background: rgba(8,8,14,0.96);
+      backdrop-filter: blur(16px);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 2.5rem;
+      gap: 3rem;
       transform: translateY(-100%);
-      transition: transform 0.5s ease;
+      transition: transform 0.55s cubic-bezier(0.4,0,0.2,1);
       z-index: 999;
     }
 
-    .nav-menu-mobile.open {
-      transform: translateY(0);
-    }
+    .nav-menu-mobile.open { transform: translateY(0); }
 
     .nav-menu-mobile a {
-      font-size: 1.4rem;
-      padding: 1.2rem 3rem;
-      min-width: 260px;
-      text-align: center;
-      color: var(--text);
+      font-size: 1.7rem;
+      font-weight: 600;
+      color: white;
       text-decoration: none;
-      font-weight: 500;
+      padding: 1rem 3rem;
+      border-radius: var(--radius);
+      transition: var(--transition);
     }
 
-    .nav-menu-mobile a:active {
-      color: var(--accent);
-      transform: scale(0.97);
+    .nav-menu-mobile a:hover {
+      background: rgba(59,130,246,0.15);
+      color: var(--accent-glow);
+      transform: scale(1.05);
     }
 
     .close-menu {
       position: absolute;
-      top: 1.5rem;
-      right: 1.5rem;
+      top: 1.8rem; right: 1.8rem;
+      font-size: 3.2rem;
+      color: white;
       background: none;
       border: none;
-      color: white;
-      font-size: 2.5rem;
       cursor: pointer;
     }
 
-    /* Section À propos – compacte sur mobile */
+    /* Contenu principal */
     .about-section {
-      min-height: 80vh;
-      display: flex; flex-direction: column; justify-content: center; align-items: center;
-      text-align: center; padding: 6rem 5% 4rem;
-      max-width: 100%;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 8rem 5% 6rem;
+      max-width: 1200px;
+      margin: 0 auto;
     }
 
     .about-title {
-      font-size: clamp(3.2rem, 14vw, 7rem);
-      font-weight: 900; margin-bottom: 1.2rem;
-      background: linear-gradient(90deg, var(--text) 40%, var(--accent) 70%, var(--text) 100%);
-      -webkit-background-clip: text; background-clip: text;
+      font-size: clamp(4.5rem, 18vw, 10rem);
+      font-weight: 900;
+      line-height: 0.88;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, #ffffff, var(--accent-glow), #e0f2fe);
+      -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
-      line-height: 0.92;
       cursor: pointer;
       user-select: none;
+      letter-spacing: -3px;
     }
 
     .about-subtitle {
-      font-size: clamp(1.1rem, 4.5vw, 1.4rem);
-      color: var(--text-secondary);
-      margin-bottom: 2.5rem; max-width: 90%; line-height: 1.5;
+      font-size: clamp(1.3rem, 5vw, 1.8rem);
+      color: var(--text-sec);
+      margin-bottom: 3.5rem;
+      max-width: 85%;
+      font-weight: 400;
+      line-height: 1.4;
+    }
+
+    .about-content {
+      background: var(--glass);
+      backdrop-filter: blur(18px);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 2.5rem 2rem;
+      max-width: 880px;
+      box-shadow: var(--shadow);
+      margin-bottom: 3rem;
     }
 
     .about-text {
-      font-size: clamp(1rem, 4vw, 1.15rem);
-      line-height: 1.8;
-      color: var(--text-secondary);
-      max-width: 92%;
-      margin-bottom: 2rem;
+      font-size: clamp(1.05rem, 4.2vw, 1.22rem);
+      line-height: 1.85;
+      color: var(--text-sec);
       text-align: left;
     }
 
-    .about-text p + p {
-      margin-top: 1.4rem;
-    }
+    .about-text p + p { margin-top: 1.6rem; }
 
-    .about-text strong {
-      color: var(--text);
-      font-weight: 600;
-    }
+    .about-text strong { color: var(--text); font-weight: 700; }
 
     .highlight {
-      color: var(--accent);
-      font-weight: 600;
+      color: var(--accent-glow);
+      font-weight: 700;
+      background: linear-gradient(to right, var(--accent), var(--accent-glow));
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .tagline {
+      font-size: clamp(1.15rem, 4.8vw, 1.4rem);
       font-style: italic;
-      opacity: 0.8;
-      font-size: clamp(1rem, 4vw, 1.1rem);
-      margin-top: 2.5rem;
-      letter-spacing: 0.5px;
+      opacity: 0.85;
+      letter-spacing: 0.8px;
+      margin-top: 2rem;
+      font-weight: 300;
     }
 
-    /* Media queries */
+    /* Responsive */
     @media (min-width: 768px) {
       #cursor { display: block; }
-      .about-section { padding: 12rem 8% 8rem; }
-      .about-title { font-size: clamp(4rem, 12vw, 9rem); }
-      .about-subtitle { font-size: clamp(1.3rem, 4.5vw, 1.8rem); }
-      .about-text { font-size: 1.15rem; max-width: 920px; }
-      .nav-links-desktop { display: flex !important; }
+      .about-section { padding: 12rem 8% 10rem; }
+      .about-content { padding: 3.5rem 4rem; }
       .menu-toggle { display: none !important; }
+      .nav-links-desktop { display: flex !important; }
       .nav-menu-mobile { display: none !important; }
     }
 
     @media (max-width: 767px) {
       .nav-links-desktop { display: none !important; }
       .menu-toggle { display: block !important; }
-      .about-section { padding: 5rem 5% 3rem; min-height: 70vh; }
-      .about-title { font-size: clamp(2.8rem, 13vw, 5rem); }
-      .about-subtitle { font-size: clamp(1rem, 4.2vw, 1.3rem); }
+      .about-section { padding: 7rem 5% 5rem; }
+      .about-title { font-size: clamp(3.5rem, 16vw, 6.5rem); }
+      .about-subtitle { font-size: clamp(1.1rem, 4.8vw, 1.5rem); }
+      .about-content { padding: 2rem 1.5rem; }
     }
   </style>
 </head>
@@ -249,24 +284,18 @@
 
   <nav id="navbar">
     <div class="logo">Gems❄️</div>
-
     <div class="nav-right">
-      <!-- Liens visibles uniquement sur desktop -->
       <div class="nav-links-desktop">
         <a href="apropos.html">À propos</a>
         <a href="contact.html">Contact</a>
         <a href="index.html">Catalogue</a>
       </div>
-
-      <!-- Burger visible uniquement sur mobile -->
       <button class="menu-toggle" id="menuToggle">☰</button>
     </div>
   </nav>
 
-  <!-- Menu burger mobile -->
   <div class="nav-menu-mobile" id="mobileMenu">
     <button class="close-menu" id="closeMenu">✕</button>
-
     <a href="apropos.html">À propos</a>
     <a href="contact.html">Contact</a>
     <a href="index.html">Catalogue</a>
@@ -274,97 +303,55 @@
 
   <section class="about-section">
     <h1 class="about-title" id="secretTrigger">Gems❄️</h1>
-    <p class="about-subtitle">Marketplace Digitale Premium – Collection 2026</p>
+    <p class="about-subtitle">Collection Privée 2026 – Luxe discret, accès exclusif</p>
 
-    <div class="about-text">
-      <p>
-        Gems❄️ est une plateforme en ligne dédiée au <strong>bien-être personnel</strong> 
-        et à l’<strong>épanouissement individuel</strong>.
-      </p>
-
-      <p>
-        Gems❄️ est née d’une vision : <strong>réinventer l’accès au luxe et à l’innovation</strong> 
-        en Afrique et au-delà.
-      </p>
-
-      <p>
-        Nous ne sommes pas une simple boutique. Nous sommes un 
-        <span class="highlight">cercle exclusif</span> où les pièces rares, 
-        les créations audacieuses et les tendances 2026 se rencontrent 
-        <strong>avant tout le monde</strong>.
-      </p>
-
-      <p>
-        Chaque produit est sélectionné avec exigence. Chaque drop est limité. 
-        Les membres du <span class="highlight">Private Circle</span> reçoivent les infos 
-        en priorité — souvent <strong>24 à 48 h</strong> avant le public.
-      </p>
-
-      <p>
-        Parce que l’excellence ne s’attend pas.<br>
-        <strong>Elle se saisit.</strong>
-      </p>
+    <div class="about-content">
+      <div class="about-text">
+        <p>Gems❄️ n’est pas une simple marketplace.</p>
+        <p>C’est un <span class="highlight">cercle fermé</span> où le luxe rencontre l’intimité, où l’innovation précède la tendance et où chaque pièce est choisie avec une exigence obsessionnelle.</p>
+        <p>Nous réinventons l’accès au <strong>premium</strong> en Afrique et au-delà : smartphones flagship, accessoires rares, drops limités – disponibles en priorité pour ceux qui savent saisir l’excellence avant qu’elle ne devienne commune.</p>
+        <p>Le <span class="highlight">Private Circle</span> reçoit les alertes 24 à 48 heures en avance. Parce que dans notre monde, <strong>l’attente n’existe pas</strong>.</p>
+        <p><strong>Gems❄️</strong> : l’élégance qui ne s’explique pas. Elle se vit.</p>
+      </div>
     </div>
 
-    <p class="tagline">Gems❄️ — Where intimacy meets discretion.</p>
+    <p class="tagline">Where exclusivity is silent, and desire is immediate.</p>
   </section>
 
   <script>
-    // Loader + navbar apparition
+    // Navbar apparition
     window.addEventListener('load', () => {
-      document.body.style.overflow = 'auto';
-      document.getElementById('navbar').style.transform = 'translateY(0)';
+      document.getElementById('navbar').classList.add('visible');
     });
 
-    // Curseur desktop only
+    // Curseur custom
     if (window.innerWidth > 767) {
       const cursor = document.getElementById('cursor');
+      cursor.classList.add('visible');
       document.addEventListener('mousemove', e => {
-        cursor.style.left = (e.clientX - 7) + 'px';
-        cursor.style.top  = (e.clientY - 7) + 'px';
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top  = e.clientY + 'px';
       });
     }
 
-    // Burger menu toggle (mobile uniquement)
-    const menuToggle = document.getElementById('menuToggle');
-    const closeMenu = document.getElementById('closeMenu');
-    const mobileMenu = document.getElementById('mobileMenu');
+    // Menu burger
+    const toggle = document.getElementById('menuToggle');
+    const menu = document.getElementById('mobileMenu');
+    const close = document.getElementById('closeMenu');
 
-    if (menuToggle) {
-      menuToggle.addEventListener('click', () => {
-        mobileMenu.classList.add('open');
-      });
-    }
+    toggle?.addEventListener('click', () => menu.classList.add('open'));
+    close?.addEventListener('click', () => menu.classList.remove('open'));
+    menu?.addEventListener('click', e => { if (e.target === menu) menu.classList.remove('open'); });
 
-    if (closeMenu) {
-      closeMenu.addEventListener('click', () => {
-        mobileMenu.classList.remove('open');
-      });
-    }
-
-    if (mobileMenu) {
-      mobileMenu.addEventListener('click', (e) => {
-        if (e.target === mobileMenu) mobileMenu.classList.remove('open');
-      });
-    }
-
-    // Secret access (double tap / double click)
-    let clickCount = 0;
+    // Secret double-tap / double-click → admin
+    let clicks = 0;
     const trigger = document.getElementById('secretTrigger');
-    const adminUrl = 'login.html';
-
-    function handleClick() {
-      clickCount++;
-      if (clickCount >= 2) {
-        window.location.href = adminUrl;
-      }
-      setTimeout(() => { clickCount = 0; }, 2000);
-    }
-
-    trigger.addEventListener('click', handleClick);
-    trigger.addEventListener('dblclick', () => {
-      window.location.href = adminUrl;
+    trigger?.addEventListener('click', () => {
+      clicks++;
+      if (clicks >= 2) window.location.href = 'login.html';
+      setTimeout(() => clicks = 0, 1800);
     });
+    trigger?.addEventListener('dblclick', () => window.location.href = 'login.html');
   </script>
 </body>
 </html>
