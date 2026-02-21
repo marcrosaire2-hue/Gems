@@ -6,158 +6,181 @@
   <title>Gems❄️ | Catalogue Officiel</title>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
 
   <style>
     :root {
       --bg: #000000;
-      --text: #f5f5f7;
-      --text-secondary: #a0a0a5;
-      --accent: #0a84ff;
-      --glass: rgba(30, 30, 32, 0.88);
-      --border: rgba(255, 255, 255, 0.12);
-      --shadow: 0 10px 30px rgba(0,0,0,0.5);
+      --text: #f9f9fb;
+      --text-secondary: #b0b0b8;
+      --accent: #3b82f6;       /* bleu plus moderne */
+      --accent-dark: #2563eb;
+      --glass: rgba(28, 28, 32, 0.78);
+      --glass-strong: rgba(35, 35, 40, 0.92);
+      --border: rgba(255, 255, 255, 0.09);
+      --shadow-sm: 0 8px 24px rgba(0,0,0,0.42);
+      --shadow-lg: 0 20px 50px rgba(0,0,0,0.6);
+      --radius: 16px;
+      --transition: all 0.38s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    * { margin:0; padding:0; box-sizing:border-box; }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       overflow-x: hidden;
-      background-image: url('m1.jpg'); /* même fond que les autres pages */
+      background-image: url('m1.jpg');
       background-size: cover;
       background-position: center;
       background-attachment: fixed;
-      touch-action: manipulation;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
     }
 
     body::before {
       content: "";
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.68);
+      background: linear-gradient(to bottom, rgba(0,0,0,0.72), rgba(0,0,0,0.58));
       z-index: -2;
+      pointer-events: none;
     }
 
-    /* ── Navbar fixe + mini-barre ─────────────────────────────── */
+    /* ── Navbar ──────────────────────────────────────── */
     nav {
       position: fixed;
       top: 0; left: 0; right: 0;
       z-index: 1000;
-      background: var(--glass);
-      backdrop-filter: blur(16px);
+      background: var(--glass-strong);
+      backdrop-filter: blur(20px) saturate(180%);
+      -webkit-backdrop-filter: blur(20px) saturate(180%);
       border-bottom: 1px solid var(--border);
-      padding: 0.85rem 5%;
+      padding: 0.9rem 5%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transform: translateY(-100%);
-      transition: transform 0.7s 0.4s ease;
+      transform: translateY(-120%);
+      transition: transform 0.8s cubic-bezier(0.23,1,0.32,1);
     }
 
     nav.visible { transform: translateY(0); }
 
     .logo {
-      font-size: clamp(1.35rem, 5.8vw, 1.65rem);
+      font-size: clamp(1.4rem, 6vw, 1.8rem);
       font-weight: 900;
-      letter-spacing: -0.3px;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #fff, #e0e0ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .menu-toggle {
       background: none;
       border: none;
-      color: var(--text);
-      font-size: 1.95rem;
+      color: white;
+      font-size: 2rem;
       cursor: pointer;
-      padding: 0.4rem;
-      display: block !important; /* toujours visible */
+      padding: 0.5rem;
     }
 
     /* Mini-barre Cercle Privé */
     .announce-bar {
       position: fixed;
-      top: 0; left: 0; right: 0;
+      top: 3.4rem; left: 0; right: 0;
       z-index: 999;
-      margin-top: 2.8rem;
       background: var(--glass);
-      backdrop-filter: blur(16px);
+      backdrop-filter: blur(18px);
       border-bottom: 1px solid var(--border);
-      padding: 0.35rem 5%;
+      padding: 0.45rem 5%;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 0.9rem;
-      font-size: 0.86rem;
+      gap: 1rem;
+      font-size: 0.88rem;
       flex-wrap: wrap;
     }
 
     .announce-badge {
-      background: #000;
-      color: #fff;
-      padding: 0.18rem 0.6rem;
+      background: #111;
+      color: #eee;
+      padding: 0.22rem 0.65rem;
       border-radius: 999px;
-      font-size: 0.65rem;
-      font-weight: 700;
+      font-size: 0.68rem;
+      font-weight: 800;
+      letter-spacing: 0.4px;
       text-transform: uppercase;
     }
 
     .announce-text strong { color: var(--accent); }
 
     .join-link {
-      background: rgba(10,132,255,0.82);
+      background: var(--accent);
       color: white;
-      padding: 0.3rem 1rem;
+      padding: 0.4rem 1.2rem;
       border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 600;
+      font-size: 0.84rem;
+      font-weight: 700;
       text-decoration: none;
+      transition: var(--transition);
     }
 
-    .join-link:active { background: var(--accent); transform: scale(0.97); }
+    .join-link:hover { background: var(--accent-dark); transform: translateY(-1px); }
+    .join-link:active { transform: scale(0.96); }
 
-    /* Menu burger plein écran */
+    /* Menu mobile plein écran */
     .nav-menu-mobile {
       position: fixed;
       inset: 0;
-      background: rgba(0,0,0,0.96);
-      backdrop-filter: blur(10px);
+      background: rgba(8,8,12,0.97);
+      backdrop-filter: blur(14px);
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      gap: 2.2rem;
+      gap: 2.8rem;
       transform: translateY(-100%);
-      transition: transform 0.45s ease;
+      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
       z-index: 998;
     }
 
     .nav-menu-mobile.open { transform: translateY(0); }
 
     .nav-menu-mobile a {
-      font-size: 1.35rem;
-      padding: 1rem 2.5rem;
-      color: var(--text);
+      font-size: 1.6rem;
+      font-weight: 600;
+      color: white;
       text-decoration: none;
-      font-weight: 500;
+      padding: 0.8rem 2rem;
+      border-radius: 12px;
+      transition: var(--transition);
+    }
+
+    .nav-menu-mobile a:hover {
+      background: rgba(255,255,255,0.08);
+      transform: scale(1.06);
     }
 
     .close-menu {
       position: absolute;
-      top: 1.2rem; right: 1.2rem;
+      top: 1.5rem; right: 1.5rem;
+      font-size: 3rem;
+      color: white;
       background: none;
       border: none;
-      color: white;
-      font-size: 2.5rem;
       cursor: pointer;
     }
 
     /* Contenu principal */
     main {
-      padding: 8.5rem 5% 3rem;
-      max-width: 1400px;
+      padding: 9rem 5% 4rem;
+      max-width: 1480px;
       margin: 0 auto;
     }
 
@@ -165,102 +188,144 @@
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
-      gap: 1rem;
-      padding: 1.5rem 5% 0;
+      gap: 0.9rem 1.1rem;
+      padding: 0 0 2rem;
+      margin-bottom: 1rem;
     }
 
     .cat-btn {
-      padding: 0.8rem 1.6rem;
+      padding: 0.75rem 1.5rem;
       border-radius: 999px;
-      background: rgba(255,255,255,0.04);
+      background: rgba(255,255,255,0.05);
       border: 1px solid var(--border);
       color: var(--text);
       font-weight: 600;
+      font-size: 0.94rem;
       cursor: pointer;
-      transition: all 0.3s;
+      transition: var(--transition);
+      backdrop-filter: blur(8px);
     }
 
-    .cat-btn.active, .cat-btn:hover {
+    .cat-btn:hover, .cat-btn.active {
       background: var(--accent);
       border-color: var(--accent);
       color: white;
+      transform: translateY(-1px);
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
-      gap: 1rem 0.9rem;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 1.1rem 1rem;
     }
 
     .card {
       background: var(--glass);
-      backdrop-filter: blur(14px);
+      backdrop-filter: blur(16px) saturate(160%);
       border: 1px solid var(--border);
-      border-radius: 12px;
+      border-radius: var(--radius);
       overflow: hidden;
       cursor: pointer;
-      transition: all 0.5s ease;
+      transition: var(--transition);
       opacity: 0;
-      transform: translateY(40px) scale(0.97);
-      box-shadow: var(--shadow);
+      transform: translateY(30px);
+      box-shadow: var(--shadow-sm);
       text-decoration: none;
       color: inherit;
+      position: relative;
     }
 
     .card.visible {
       opacity: 1;
-      transform: translateY(0) scale(1);
+      transform: translateY(0);
     }
 
-    .card:nth-child(odd)  { transition-delay: 0.1s; }
-    .card:nth-child(even) { transition-delay: 0.18s; }
-
     .card:hover {
-      border-color: var(--accent);
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-10px);
+      box-shadow: var(--shadow-lg);
+      border-color: rgba(59,130,246,0.4);
     }
 
     .card img {
       width: 100%;
-      height: clamp(110px, 35vw, 150px);
+      height: clamp(140px, 42vw, 180px);
       object-fit: cover;
+      transition: transform 0.55s ease;
+    }
+
+    .card:hover img {
+      transform: scale(1.06);
+    }
+
+    .card-content {
+      padding: 1rem 1.1rem 1.3rem;
     }
 
     .card h3 {
-      font-size: 0.96rem;
+      font-size: 1.02rem;
       font-weight: 700;
-      padding: 0.8rem 0.9rem 0.3rem;
-      margin: 0;
+      line-height: 1.3;
+      margin-bottom: 0.4rem;
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
     }
 
     .card .price {
-      font-size: 0.9rem;
-      color: var(--accent);
+      font-size: 1.1rem;
       font-weight: 800;
-      padding: 0 0.9rem 1rem;
-      margin: 0;
+      color: var(--accent);
+      margin-bottom: 0.8rem;
     }
 
-    .loader {
+    .btn-more {
+      display: block;
+      width: 100%;
+      padding: 0.72rem;
+      background: rgba(59,130,246,0.18);
+      color: var(--accent);
+      border: none;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .btn-more:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .loader, .no-items {
       grid-column: 1 / -1;
       text-align: center;
-      padding: 6rem 2rem;
+      padding: 8rem 1rem;
       color: var(--text-secondary);
-      font-size: 1.2rem;
+      font-size: 1.3rem;
+      font-weight: 400;
     }
 
-    /* Responsive */
+    /* Responsive ──────────────────────────────── */
     @media (max-width: 767px) {
-      .announce-bar { margin-top: 2.7rem; padding: 0.32rem 4%; font-size: 0.82rem; gap: 0.7rem; }
-      main { padding: 7.5rem 4% 2.5rem; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(138px, 1fr)); gap: 0.9rem 0.8rem; }
+      .announce-bar { top: 3.2rem; padding: 0.4rem 4%; font-size: 0.84rem; gap: 0.8rem; }
+      main { padding: 8rem 4% 3.5rem; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(148px, 1fr)); gap: 1rem 0.9rem; }
+      .card h3 { font-size: 0.97rem; }
+      .card .price { font-size: 1.05rem; }
     }
 
     @media (min-width: 768px) {
-      nav { padding: 1rem 7%; }
-      .announce-bar { margin-top: 3.5rem; }
-      main { padding: 9rem 6% 4rem; }
-      .grid { grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1.5rem; }
+      nav { padding: 1.1rem 7%; }
+      .announce-bar { top: 4rem; }
+      main { padding: 10rem 6% 5rem; }
+      .grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 1.6rem 1.4rem; }
+      .card img { height: clamp(180px, 38vw, 220px); }
+    }
+
+    @media (min-width: 1024px) {
+      .grid { gap: 2rem 1.8rem; }
     }
   </style>
 </head>
@@ -273,7 +338,7 @@
 
   <div class="announce-bar">
     <span class="announce-badge">PRIVÉ</span>
-    <span class="announce-text"><strong>Le Cercle Privé</strong> – Drops en priorité</span>
+    <span class="announce-text"><strong>Le Cercle Privé</strong> – Drops en priorité & avantages exclusifs</span>
     <a href="https://chat.whatsapp.com/D6BcVIbllGL7Fj6YVqPccP?mode=gi_t" target="_blank" rel="noopener" class="join-link">
       Rejoindre →
     </a>
@@ -289,34 +354,38 @@
 
   <main>
     <div class="categories">
-      <button class="cat-btn active">Tous</button>
-      <button class="cat-btn">Smartphones</button>
-      <button class="cat-btn">Accessoires</button>
+      <button class="cat-btn active" data-category="all">Tous</button>
+      <button class="cat-btn" data-category="smartphones">Smartphones</button>
+      <button class="cat-btn" data-category="accessoires">Accessoires</button>
     </div>
 
-    <div class="container">
-      <div id="loader" class="loader">Chargement des produits...</div>
-      <div class="grid" id="grid"></div>
-    </div>
+    <div class="grid" id="grid"></div>
+    <div id="loader" class="loader">Chargement des gems…</div>
   </main>
 
   <script>
-    const nexa = supabase.createClient("https://antifrphxjyaylklsijh.supabase.co", "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl");
+    const nexa = supabase.createClient(
+      "https://antifrphxjyaylklsijh.supabase.co",
+      "sb_publishable_bhzXA7_xxTiWIkU07LZCDw_YsDIYEBl"
+    );
 
-    // Apparition navbar
+    // Navbar apparition
     window.addEventListener('load', () => {
-      document.getElementById('navbar').style.transform = 'translateY(0)';
+      document.getElementById('navbar').classList.add('visible');
     });
 
-    // Menu burger (toujours visible)
+    // Menu mobile
     const toggle = document.getElementById('menuToggle');
     const menu = document.getElementById('mobileMenu');
     const closeBtn = document.getElementById('closeMenu');
 
     toggle?.addEventListener('click', () => menu.classList.add('open'));
     closeBtn?.addEventListener('click', () => menu.classList.remove('open'));
-    menu?.addEventListener('click', e => { if (e.target === menu) menu.classList.remove('open'); });
+    menu?.addEventListener('click', e => {
+      if (e.target === menu) menu.classList.remove('open');
+    });
 
+    // Chargement catalogue
     async function chargerCatalogue() {
       const grid = document.getElementById('grid');
       const loader = document.getElementById('loader');
@@ -329,38 +398,52 @@
 
         if (error) throw error;
 
+        loader.style.display = 'none';
+
         if (!data || data.length === 0) {
-          loader.innerText = "Aucun article en stock pour le moment.";
+          grid.innerHTML = `<div class="no-items">Aucune gem disponible pour le moment… ❄️</div>`;
           return;
         }
 
-        loader.style.display = 'none';
-
         grid.innerHTML = data.map(p => `
           <a href="details.html?id=${p.id}" class="card">
-            <img src="${p.image_url || ''}" alt="${p.titre || 'Produit'}" loading="lazy">
-            <h3>${p.titre || 'Sans titre'}</h3>
-            <div class="price">${p.prix ? p.prix + ' FCFA' : 'Sur demande'}</div>
-            <button class="btn-more">Voir plus</button>
+            <img src="${p.image_url || 'placeholder.jpg'}" alt="${p.titre || 'Produit Gems'}" loading="lazy">
+            <div class="card-content">
+              <h3>${p.titre || 'Article sans titre'}</h3>
+              <div class="price">${p.prix ? p.prix.toLocaleString('fr-FR') + ' FCFA' : 'Sur demande'}</div>
+              <button class="btn-more" type="button">Voir l'article</button>
+            </div>
           </a>
         `).join('');
 
-        // Apparition progressive
-        const observer = new IntersectionObserver(entries => {
+        // Apparition progressive + stagger
+        const cards = document.querySelectorAll('.card');
+        const observer = new IntersectionObserver((entries) => {
           entries.forEach(entry => {
-            if (entry.isIntersecting) entry.target.classList.add('visible');
+            if (entry.isIntersecting) {
+              entry.target.classList.add('visible');
+            }
           });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.15 });
 
-        document.querySelectorAll('.card').forEach(card => observer.observe(card));
+        cards.forEach(card => observer.observe(card));
 
       } catch (err) {
         console.error(err);
-        loader.innerText = "Erreur de chargement du catalogue.";
+        loader.innerHTML = "Désolé, erreur lors du chargement…";
       }
     }
 
     chargerCatalogue();
+
+    // (Optionnel) Filtre catégories – à activer si tu ajoutes un champ "categorie" dans la table
+    // document.querySelectorAll('.cat-btn').forEach(btn => {
+    //   btn.addEventListener('click', () => {
+    //     document.querySelectorAll('.cat-btn').forEach(b => b.classList.remove('active'));
+    //     btn.classList.add('active');
+    //     // → ici logique de filtrage via data-category + classe CSS hidden sur les cards
+    //   });
+    // });
   </script>
 </body>
 </html>
